@@ -11,9 +11,23 @@ On retrouve les notions suivantes dans osmrtcheck
 - alerte
 - domaine
 - événements
+- notifications
 - validation
 - zone de couverture
 - règles de conformités
+
+
+.. graphviz::
+
+   digraph foo {
+   "rules 1" -> "domaine";
+   "rules 2" -> "domaine";
+   "geo zone" -> "domaine";
+
+   "domaine" -> "alerte";
+   "utilisateur" -> "validation" -> "alerte";
+   "alerte" -> "utilisateur" [color="blue"];
+   }
 
 
 Événements

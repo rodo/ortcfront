@@ -12,7 +12,7 @@ Contents:
    :maxdepth: 2
 
    introduction
-
+   events
 
 Indices and tables
 ==================
