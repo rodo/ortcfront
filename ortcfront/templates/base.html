@@ -1,0 +1,67 @@
+{% load i18n %}{% load compress %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>OpenStreetMap Realtime Check</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="OpenStreetMap realtim check">
+    <meta name="keywords" content="osm, openstreetmap, monitoring">
+    <meta name="author" content="Rodolphe Quiédeville">
+    <link href="{{STATIC_URL}}vendor/bootstrap.min.css" rel="stylesheet">
+    <!-- These CSS can-t be put elsewhere -->
+    <style type="text/css">
+      body {
+      padding-top: 60px;
+      padding-bottom: 40px;
+      }
+      .sidebar-nav {
+      padding: 9px 0;
+      }
+    </style>
+    <link href="{{STATIC_URL}}vendor/leaflet/leaflet.css" rel="stylesheet">       
+    {% compress css %}
+    {% block cssheaders %}{% endblock %}
+    {% endcompress %}
+    <!-- jsheaders -->
+    <script src="{{STATIC_URL}}vendor/jquery-1.11.0.min.js"></script>
+    <script src="{{STATIC_URL}}vendor/d3.v3.min.js"></script>
+    <script src="{{STATIC_URL}}vendor/leaflet/leaflet.js"></script>
+    <script src="{{STATIC_URL}}vendor/mustache.js"></script>
+    {% block jsvendors %}{% endblock %}
+    {% compress js %}
+    <script src="{{STATIC_URL}}js/colors.js"></script>
+    {% block jsheaders %}
+    {% endblock %}
+    {% endcompress %}
+    <!-- /jsheaders -->
+    {% block headers %}
+    {% endblock %}
+  </head>
+  {% block body %}<body>{% endblock %}
+    <div id="wrap">
+      {% include "navbar.html" %}
+      <div id="container" class="container">
+
+	<div class="row">
+	  <div class="col-md-12">
+            {% block content %}
+	    {% endblock %}
+	  </div>
+	</div><!--/row-->
+
+      </div><!--/.container-->
+
+    </div><!--/ .wrap -->
+    {% block footer %}
+    {% endblock %}
+    {% compress js %}
+    <script src="{{STATIC_URL}}vendor/bootstrap-dropdown.js"></script>
+    <script src="{{STATIC_URL}}vendor/bootstrap-collapse.js"></script>
+    <script src="{{STATIC_URL}}vendor/bootstrap-modal.js"></script>
+    {% endcompress %}
+    {% compress js %}
+    {% block jsfooter %}{% endblock %}
+    {% endcompress %}
+  </body>
+</html>

@@ -1,0 +1,21 @@
+{% load crispy_forms_field %}
+
+<div id="div_{{ field.auto_id }}" class="form-group">
+  <label for="id_geoloc" class="control-label col-lg-2"></label>
+  <div class="controls col-lg-10">
+    <div class="input-group">
+      <input id="tool-typeahead" type="text" placeholder="Ajouter une compétence" data-provide="typeahead" class="form-control">
+      <div class="input-group-btn">
+        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Niveau <span class="caret"></span></button>
+        <ul class="dropdown-menu pull-right">
+          <li><a href="#">Expert</a></li>
+          <li><a href="#">Bien maîtrisé</a></li>
+          <li><a href="#">Maîtrisé</a></li>
+          <li><a href="#">Connaissances de base</a></li>
+        </ul>
+      </div><!-- /btn-group -->
+
+
+    </div>
+  </div>
+</div>

@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% load i18n %}{% load compress %}
+{% block content %}
+<div class="row">    
+  <div class="col-md-4">
+    <div id="emploigraph" style="margin-left: 50px; height: 280px;"></div>
+  </div>
+  <div class="col-md-4">
+    <div id="stagegraph" style="margin-left: 50px; height: 280px;"></div>
+  </div>
+  <div class="col-md-4">
+    <div id="missiongraph" style="margin-left: 50px; height: 280px;"></div>
+  </div>
+</div>
+<div class="row">    
+  <div class="col-md-4">
+    <a href="/emploi/" type="button" class="btn btn-primary btn-lg btn-block">
+      {% trans "Alerts" %}</a>
+  </div>
+
+</div>
+
+<div class="row">    
+  <div class="col-md-4">
+    <div>
+      <table class="table table-striped">
+	<thead>
+	  <tr>
+	    <th>{% trans "Dernières offres" %}</th>
+	  </tr>
+	</thead>
+	<tbody>
+	  {% for job in jobs %}
+	  <tr>
+	    <td><a href="/offres/{{job.id}}/">{{job.title}}</a></td>
+	  </tr>
+	  {% endfor %}
+	</tbody>
+      </table>      
+    </div>    
+  </div>
+</div>
+{% endblock %}

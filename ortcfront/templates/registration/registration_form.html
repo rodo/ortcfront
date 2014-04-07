@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block content %}
+<div class="row">
+  <div class="col-md-3">
+  </div>
+  <div class="col-md-6">
+
+    <h2>{% trans "Créer un compte" %}</h2>
+
+    <div class="well">
+
+      <form method="post" action=".">
+	{% csrf_token %}
+	<div class="form-group">
+	  <label for="exampleInputEmail1">Username</label>
+	  <input name="username" type="text" class="form-control" id="exampleInputEmail1" placeholder="login" required autofocus>
+	  {{form.username.errors}}
+	</div>
+
+	<div class="form-group">
+	  <label for="exampleInputEmail1">Email address</label>
+	  <input name="email" type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email" required autofocus>
+	  {{form.email.errors}}
+	</div>
+
+	<div class="form-group">
+	  <label for="exampleInputPassword1">Password</label>
+	  <input name="password1" type="password" class="form-control"id="exampleInputPassword1" placeholder="Password" required autofocus>
+	  {{form.password1.errors}}
+	</div>
+
+	<div class="form-group">
+	  <label for="exampleInputPassword1">Password verification</label>
+	  <input name="password2" type="password" class="form-control"id="exampleInputPassword1" placeholder="Password" required autofocus>
+	  {{form.password2.errors}}
+	</div>
+
+	<input type="submit" class="btn btn-primary" value="{% trans 'Envoyer !' %}" />
+      </form>
+    </div>
+
+  </div>
+
+  <div class="col-md-3">
+    {% for res in motds %}
+    <div class="panel panel-default">
+      <div class="panel-heading">{{res.title}}</div>
+      <div class="panel-body">{{ res.body }}</div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+{% endblock %}

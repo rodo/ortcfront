@@ -1,1 +1,4 @@
 venv/
+*~
+ortcfront/settings/local_settings.py
+*.pyc

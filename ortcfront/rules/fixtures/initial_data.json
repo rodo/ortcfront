@@ -1,0 +1,6 @@
+[
+    {"model": "rules.rules", "pk": 1, 
+     "fields": {"name": "fire_hydrant", "tag_regex": "emergency=fire_hydrant", "active": true, "node_applied": true}},
+    {"model": "rules.rules", "pk": 2, 
+     "fields": {"name": "Defibrillateur", "tag_regex": "emergency=defibrillator", "active": true, "node_applied": true}}
+]
