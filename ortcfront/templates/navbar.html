@@ -18,15 +18,16 @@
         <li><a href="/alerts/">{% trans "Alerts" %}</a></li>
       </ul>
       
-      <p class="navbar-text pull-right">
+      <ul class="nav navbar-nav navbar-right">
+
 	{% if user.is_authenticated %}
-	Salut à toi <a href="/accounts/profile/">{{ user.username }}</a> /
-	<a href="/accounts/logout/">Déconnexion</a>
+	<li><a href="/accounts/profile/">{{ user.username }}</a></li>
+	<li><a href="/accounts/logout/">Déconnexion</a></li>
 	{% else %}
-	<a href="/accounts/login/">Mon compte</a> /
-	<a href="/accounts/register/">Nouveau compte</a>
+	<li><a href="/accounts/login/">Se connecter</a></li>
 	{% endif %}
-      </p>
+
+      </ul>
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->

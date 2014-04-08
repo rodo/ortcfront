@@ -4,11 +4,14 @@ from django.conf.urls import patterns, include, url
 # from django.contrib import admin
 # admin.autodiscover()
 
-urlpatterns = patterns('',
-                       url(r'^rules/', include('ortcfront.rules.urls')),
-                       url(r'^alerts/', include('ortcfront.alerts.urls')),
-                       url(r'^$', 'ortcfront.users.views.home', name='home'),
+from .rules.views import EventsList
 
+urlpatterns = patterns('',
+                       url(r'^rule', include('ortcfront.rules.urls')),
+                       url(r'^alert', include('ortcfront.alerts.urls')),
+                       url(r'^events/', EventsList.as_view()),
+                       url(r'^$', 'ortcfront.users.views.home', name='home'),
+                       url(r'^accounts/profile/$', 'ortcfront.users.views.profile', name='profile'),
                        url(r'^accounts/', include('registration.backends.default.urls')),
     # url(r'^ortcfront/', include('ortcfront.foo.urls')),
 

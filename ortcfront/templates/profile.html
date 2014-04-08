@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% load i18n %}{% load compress %}
+{% block content %}
+
+<div class="row">
+  <div class="col-md-5">
+    <div>
+      <table class="table table-striped">
+	<thead>
+	  <tr>
+	    <th>{% trans "My subscriptions" %}</th>
+	  </tr>
+	</thead>
+	<tbody>
+	  {% for subscription in my_subscriptions %}
+	  <tr>
+	    <td><a href="{{subscription.alert.get_absolute_url}}">{{subscription.alert.name}}</a></td>
+	  </tr>
+	  {% endfor %}
+	</tbody>
+      </table>
+    </div>
+  </div>
+  <div class="col-md-5">
+    <div>
+      <table class="table table-striped">
+	<thead>
+	  <tr>
+	    <th>{% trans "My domains" %}</th>
+	  </tr>
+	</thead>
+	<tbody>
+	  {% for domain in my_domains %}
+	  <tr>
+	    <td><a href="{{domain.get_absolute_url}}">{{domain.name}}</a></td>
+	  </tr>
+	  {% endfor %}
+	</tbody>
+      </table>
+    </div>
+  </div>
+
+
+  <div class="col-md-2">
+    <p>
+      <a href="{% url 'alert_new' %}" class="btn btn-primary btn-block">{% trans "New alert" %}</a>
+    </p>
+    <p>
+      <a href="{% url 'domain_new' %}" class="btn btn-primary btn-block">{% trans "New domain" %}</a>
+    </p>
+    <p>
+      <a href="{% url 'rule_new' %}" class="btn btn-primary btn-block">{% trans "New rule" %}</a>
+    </p>
+    <p>
+      <a href="{% url 'geozone_new' %}" class="btn btn-primary btn-block">{% trans "New zone" %}</a>
+    </p>
+  </div>
+</div>
+{% endblock %}

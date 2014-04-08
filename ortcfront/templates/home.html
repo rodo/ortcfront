@@ -2,37 +2,22 @@
 {% load i18n %}{% load compress %}
 {% block content %}
 <div class="row">    
-  <div class="col-md-4">
-    <div id="emploigraph" style="margin-left: 50px; height: 280px;"></div>
-  </div>
-  <div class="col-md-4">
-    <div id="stagegraph" style="margin-left: 50px; height: 280px;"></div>
-  </div>
-  <div class="col-md-4">
-    <div id="missiongraph" style="margin-left: 50px; height: 280px;"></div>
-  </div>
-</div>
-<div class="row">    
-  <div class="col-md-4">
-    <a href="/emploi/" type="button" class="btn btn-primary btn-lg btn-block">
-      {% trans "Alerts" %}</a>
-  </div>
-
-</div>
-
-<div class="row">    
-  <div class="col-md-4">
+  <div class="col-md-12">
     <div>
       <table class="table table-striped">
 	<thead>
 	  <tr>
-	    <th>{% trans "Dernières offres" %}</th>
+	    <th>{% trans "Alerts" %}</th>
+	    <th>{% trans "Subscribers" %}</th>
+	    <th>{% trans "Notifications" %}</th>
 	  </tr>
 	</thead>
 	<tbody>
-	  {% for job in jobs %}
+	  {% for alert in alerts %}
 	  <tr>
-	    <td><a href="/offres/{{job.id}}/">{{job.title}}</a></td>
+	    <td><a href="{{ alert.get_absolute_url }}">{{alert.name}}</a></td>
+	    <td><span class="badge">{{alert.nb_subscribers}}</span></td>
+	    <td><span class="badge">{{alert.nb_notifications}}</span></td>
 	  </tr>
 	  {% endfor %}
 	</tbody>

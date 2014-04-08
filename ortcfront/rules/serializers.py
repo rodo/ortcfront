@@ -19,11 +19,16 @@
 Serializers forem Django Rest Framework
 """
 from rest_framework import serializers
-from .models import Rules
+from .models import Rule, Event
 
 
-class RulesSerializer(serializers.ModelSerializer):
+class RuleSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Rules
-        fields = ('id', 'name', 'tag_regex',
-                  'node_applied')
+        model = Rule
+        fields = ('id', 'name', 'tag_regex', 'node_applied')
+
+
+class EventSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Event
+        fields = ('id', 'osmid', 'changeset','rule')

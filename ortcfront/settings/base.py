@@ -36,7 +36,7 @@ USE_I18N = True
 USE_L10N = True
 
 # If you set this to False, Django will not use timezone-aware datetimes.
-USE_TZ = True
+USE_TZ = False
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/home/media/media.lawrence.com/media/"
@@ -95,6 +95,16 @@ MIDDLEWARE_CLASSES = (
 
 ROOT_URLCONF = 'ortcfront.urls'
 
+# Crispy Forms
+CRISPY_TEMPLATE_PACK = 'bootstrap3'
+
+# Compressor
+#
+COMPRESS_CSS_FILTERS = ['compressor.filters.csstidy.CSSTidyFilter']
+
+#COMPRESS_JS_FILTERS = ['compressor.filters.template.TemplateFilter']
+
+
 # Python dotted path to the WSGI application used by Django's runserver.
 WSGI_APPLICATION = 'ortcfront.wsgi.application'
 
@@ -116,16 +126,36 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.admin',
+    'django.contrib.gis',
     'registration',
     'compressor',
+    'leaflet',
+    'djgeojson',
     'rest_framework',
     'rest_framework.authtoken',
     'crispy_forms',
     'ortcfront.users',
     'ortcfront.rules',
-    'ortcfront.alerts',
-
+    'ortcfront.alerts'
 )
+
+LEAFLET_CONFIG = {
+    'DEFAULT_CENTER': (50.0, 5.0),
+    'DEFAULT_ZOOM': 2,
+    'MIN_ZOOM': 2,
+    'MAX_ZOOM': 18,
+    'RESET_VIEW': False,
+    'PLUGINS': {
+        'draw': {
+            'css': '/static/leaflet/draw/leaflet.draw.css',
+            'js': '/static/leaflet/draw/leaflet.draw.js',
+            'auto-include': True,
+            },
+    }
+    
+}
+
+
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to

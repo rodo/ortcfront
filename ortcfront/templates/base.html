@@ -1,9 +1,9 @@
-{% load i18n %}{% load compress %}
+{% load i18n %}{% load compress %}{% load leaflet_tags %}
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>OpenStreetMap Realtime Check</title>
+    <title>OpenStreetMap Realtime Check{% block title %}{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="OpenStreetMap realtim check">
     <meta name="keywords" content="osm, openstreetmap, monitoring">
@@ -19,15 +19,15 @@
       padding: 9px 0;
       }
     </style>
-    <link href="{{STATIC_URL}}vendor/leaflet/leaflet.css" rel="stylesheet">       
+    {% leaflet_css plugins="forms" %}
     {% compress css %}
     {% block cssheaders %}{% endblock %}
     {% endcompress %}
     <!-- jsheaders -->
     <script src="{{STATIC_URL}}vendor/jquery-1.11.0.min.js"></script>
     <script src="{{STATIC_URL}}vendor/d3.v3.min.js"></script>
-    <script src="{{STATIC_URL}}vendor/leaflet/leaflet.js"></script>
     <script src="{{STATIC_URL}}vendor/mustache.js"></script>
+    {% leaflet_js plugins="forms" %}
     {% block jsvendors %}{% endblock %}
     {% compress js %}
     <script src="{{STATIC_URL}}js/colors.js"></script>

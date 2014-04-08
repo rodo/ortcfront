@@ -1,0 +1,71 @@
+{% extends "base.html" %}{% load leaflet_tags %}{% load geojson_tags %}
+{% load i18n %}{% load compress %}{% load crispy_forms_tags %}
+{% block title %} : {{object.name}}{% endblock %}
+{% block content %}
+<div class="row">
+  <div class="col-md-10">
+    <h3>{% trans "Alert" %} : {{object.name}}</h3>
+    <hr/>
+    <a href="{{object.domain.get_absolute_url}}">{{object.domain}}</a>
+
+
+    <div class="row">
+      <div class="col-md-5">
+      <table class="table table-striped">
+	<thead>
+	  <tr>
+	    <th>{% trans "Rules" %}</th>
+	  </tr>
+	</thead>
+	<tbody>
+	  {% for rule in object.get_rules %}
+	  <tr>
+	    <td><a href="{{rule.get_absolute_url }}">{{rule.name}}</a></td>
+	    <td>{{rule.tag_regex}}</td>
+	  </tr>
+	  {% endfor %}
+	</tbody>
+      </table>      
+
+      </div>
+      <div class="col-md-5">
+	{% leaflet_map "alert_detail" callback="main_map_init" %}
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-2">
+      <p>
+	<a href="{% url 'alert_subscribe' object.id %}" class="btn btn-primary btn-block">{% trans "Subscribe" %}</a>
+      </p>
+
+    <div>
+      <ul>
+	<li>Subscribers : {{object.nb_subscribers}}</li>
+	<li>Notifications : {{object.nb_notifications}}</li>
+      </ul>
+    </div>
+
+    <div>
+      {% for subscriber in object.get_subscribers %}
+      <tr>
+	<td>{{subscriber.user.username}}</a></td>
+	<td>{{rule.tag_regex}}</td>
+      </tr>
+      {% endfor %}
+    </div>
+
+  </div>
+</div>
+<script type="text/javascript">
+  function main_map_init (map, options) {
+
+  var layer = L.geoJson();
+  map.addLayer(layer);
+  $.getJSON("{% url 'geozone_geojson' object.geozone.id %}", function (data) {
+    layer.addData(data);
+    map.fitBounds(layer.getBounds());
+  });
+  }
+</script>
+{% endblock %}

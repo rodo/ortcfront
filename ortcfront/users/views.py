@@ -19,6 +19,9 @@
 """
 import logging
 from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+from ortcfront.rules.models import Domain, Rule
+from ortcfront.alerts.models import Alert, Notification, Subscription
 
 logger = logging.getLogger(__name__)
 
@@ -26,6 +29,20 @@ logger = logging.getLogger(__name__)
 def home(request):
     """The home page
     """
+    alerts = Alert.objects.filter(enable=True).order_by('-create_on')
     return render(request,
                   'home.html',
-                  {})
+                  {'alerts': alerts})
+
+
+@login_required
+def profile(request):
+    """The home page
+    """
+    domains = Domain.objects.filter(enable=True).order_by('-created')
+    notification = Notification.objects.filter(user=request.user).order_by('-date')
+    my_subscriptions = Subscription.objects.filter(user=request.user)
+    return render(request,
+                  'profile.html',
+                  {'my_domains': domains,
+                   'my_subscriptions': my_subscriptions})
