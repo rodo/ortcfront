@@ -4,7 +4,7 @@ from django.conf.urls import patterns, include, url
 # from django.contrib import admin
 # admin.autodiscover()
 
-from .rules.views import EventsList
+from .alerts.views import EventsList
 
 urlpatterns = patterns('',
                        url(r'^rule', include('ortcfront.rules.urls')),

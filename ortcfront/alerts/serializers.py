@@ -19,10 +19,16 @@
 Serializers for Django Rest Framework
 """
 from rest_framework import serializers
-from .models import Alert
+from .models import Alert, Event
 
 
 class AlertSerializer(serializers.ModelSerializer):
     class Meta:
         model = Alert
         fields = ('id', 'name')
+
+
+class EventSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Event
+        fields = ('id', 'item', 'osmid', 'changeset','rule','geom')

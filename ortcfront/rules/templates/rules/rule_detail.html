@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% load i18n %}{% load compress %}{% load crispy_forms_tags %}
+{% load osm_tags %}
+{% block content %}
+<div class="row">
+  <div class="col-md-4">
+    <div class="well">
+    <ul>
+      <li>{{object.name}}</li>
+      <li>{{object.create_by.username}}</li>
+      <li>{{object.create_on}}</li>
+      <li>Use in #domains : {{object.domains.count}}
+	<ul>
+	  {% for domain in object.domains.all %}
+	  <li><a href="{{domain.get_absolute_url}}">{{domain.name}}</a></li>
+	  {% endfor %}
+	</ul>
+
+      </li>
+    </ul>
+    </div>
+
+  </div>
+
+  <div class="col-md-8">
+    <div class="alert alert-info">
+      <p>{{object.tag_regex}}</p>
+    </div>
+    <h4>{% trans "Events" %}</h4>
+    <table class="table table-striped">
+      <thead>
+	<tr>
+	  <th>{% trans "Date" %}</th>
+	  <th>{% trans "Osmid" %}</th>
+	  <th>{% trans "Changeset" %}</th>
+	</tr>
+      </thead>
+      <tbody>
+	{% for event in events %}
+	<tr>
+	  <td>{{event.date_event}}</td>
+	  <td><a target="_blank" href="{% osm_www %}/{% osm_item event.item %}/{{event.osmid}}">{{event.osmid}}</a></td>
+	  <td>#<a target="_blank" href="http://www.openstreetmap.org/changeset/{{event.changeset}}">{{event.changeset}}</a></td>
+	</tr>
+	{% endfor %}
+      </tbody>
+    </table>      
+
+
+  </div>
+
+
+</div>
+{% endblock %}

@@ -35,33 +35,11 @@ from django.contrib.auth.decorators import login_required
 from django.views.generic import (DetailView, ListView, CreateView,
                                   UpdateView, TemplateView)
 from django.shortcuts import get_object_or_404
-from ortcfront.rules.models import Rule, Event, Domain
+from ortcfront.rules.models import Rule, Domain
 from ortcfront.rules.forms import DomainNewForm, RuleNewForm
-from ortcfront.rules.serializers import RuleSerializer, EventSerializer
+from ortcfront.rules.serializers import RuleSerializer
 from django.core.urlresolvers import reverse, reverse_lazy
-
-
-class EventsList(APIView):
-    """View to list all events
-    """
-    authentication_classes = (authentication.TokenAuthentication,)
-    #permission_classes = (permissions.IsAdminUser,)
-
-    def get(self, request, format=None):
-        """
-        Return a list of all users.
-        """
-        events = Event.objects.all()
-        serializer = EventSerializer(events, many=True)
-        return Response(serializer.data)
-
-
-    def post(self, request, format=None):
-        serializer = EventSerializer(data=request.DATA)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+from ortcfront.alerts.models import Event
 
 
 class JSONResponse(HttpResponse):
@@ -137,7 +115,7 @@ class DomainNewView(CreateView):
     success_url = reverse_lazy('profile')
 
     def form_valid(self, form):
-        form.instance.user_created = self.request.user
+        form.instance.create_by = self.request.user
         return super(DomainNewView, self).form_valid(form)
 
 
@@ -194,4 +172,5 @@ class RuleView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(RuleView, self).get_context_data(**kwargs)
+        context['events'] = Event.objects.filter(rule=self.object).order_by('-date_event')[0:10]
         return context

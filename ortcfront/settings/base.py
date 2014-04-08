@@ -130,6 +130,7 @@ INSTALLED_APPS = (
     'registration',
     'compressor',
     'leaflet',
+    'django_gravatar',
     'djgeojson',
     'rest_framework',
     'rest_framework.authtoken',
@@ -155,7 +156,11 @@ LEAFLET_CONFIG = {
     
 }
 
+OSM_WWW = "http://www.openstreetmap.org"
 
+OSM_ITEMS = {'1': 'node',
+             '2': 'way',
+             '3': 'relation'}
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to

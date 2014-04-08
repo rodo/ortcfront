@@ -22,6 +22,7 @@ from django.db import models
 from django.contrib.gis.db import models as gismodels
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
+from django.contrib.gis.geos import GEOSGeometry
 from ortcfront.rules.models import Domain, Rule
 
 
@@ -36,6 +37,8 @@ class Geozone(models.Model):
     create_on = models.DateTimeField(auto_now_add=True)
 
     geom = gismodels.MultiPolygonField()
+
+    objects = gismodels.GeoManager()
 
     def __unicode__(self):
         """The unicode method
@@ -90,12 +93,34 @@ class Alert(models.Model):
         return self.name
 
 
+class Event(models.Model):
+    """An event pushed on the platform by osmrtcheck
+    """
+    rule = models.ForeignKey(Rule)
+    item = models.PositiveSmallIntegerField(choices=((1, 'node'),
+                                                     (2, 'way'),
+                                                     (3, 'relation')))
+    osmid = models.BigIntegerField()
+    changeset = models.BigIntegerField()
+    #
+    geom = models.TextField(blank=True, null=True)
+    # non mandatory fields
+    date_event = models.DateTimeField(auto_now_add=True)
+    processed = models.BooleanField(default=False)
+    date_processed = models.DateTimeField(auto_now_add=False,
+                                          blank=True,
+                                          null=True)
+
+    class Meta:
+        unique_together = ('rule', 'osmid', 'changeset')
+
+
 class Subscription(models.Model):
     """
     """
     user = models.ForeignKey(User)
     alert = models.ForeignKey(Alert)
-    created = models.DateTimeField(auto_now_add=True)
+    create_on = models.DateTimeField(auto_now_add=True)
 
 
 class Notification(models.Model):
@@ -103,12 +128,26 @@ class Notification(models.Model):
     """
     user = models.ForeignKey(User)
     alert = models.ForeignKey(Alert)
-    date = models.DateTimeField(auto_now_add=True)
+    create_on = models.DateTimeField(auto_now_add=True)
 
+
+def analyze_event(sender, instance, created, **kwargs):
+    # instance (models.Event)
+    if created:
+        domains = instance.rule.domains.all()
+        alerts = Alert.objects.filter(domain__in=domains)
+        # instance['geom'] is a string here
+        geom = GEOSGeometry(instance.geom)
+        alerts = alerts.filter(geozone__geom__contains=geom)
+        for alert in alerts:
+            for sub in Subscription.objects.filter(alert=alert):
+                Notification.objects.create(user=sub.user,
+                                            alert=alert)
 
 def auto_subscribe_alert(sender, instance, created, **kwargs):
     if created:
         Subscription.objects.create(user=instance.create_by,
                                     alert=instance)
 
+post_save.connect(analyze_event, sender=Event)
 post_save.connect(auto_subscribe_alert, sender=Alert)

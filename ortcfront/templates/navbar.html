@@ -1,4 +1,4 @@
-{% load i18n %}
+{% load i18n %}{% load gravatar %}
 <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
 
@@ -21,6 +21,7 @@
       <ul class="nav navbar-nav navbar-right">
 
 	{% if user.is_authenticated %}
+	<li>{% gravatar user.email 40 %}</li>
 	<li><a href="/accounts/profile/">{{ user.username }}</a></li>
 	<li><a href="/accounts/logout/">Déconnexion</a></li>
 	{% else %}

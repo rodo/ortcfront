@@ -2,13 +2,46 @@
 {% load i18n %}{% load compress %}{% load crispy_forms_tags %}
 {% block content %}
 <div class="row">
-  <div class="col-md-8">
-    {{object.name}}
+  <div class="col-md-4">
+
+    <div class="well">
+      <ul>
+	<li>
+	  {% trans "Domain" %} : <a href="{{object.domain.get_absolute_url}}">{{object.name}}</a>
+	</li>
+	<li>
+	  {% trans "Created by" %} {{object.create_by.username}}
+	</li>
+	<li>
+	  {% trans "Created on" %} {{object.create_on}}
+	</li>
+      </ul>
+    </div>
   </div>
 
-  <div class="col-md-4">
-    <div>
+  <div class="col-md-6">
+    <table class="table table-striped">
+      <thead>
+	<tr>
+	  <th>{% trans "Rules" %}</th>
+	</tr>
+      </thead>
+      <tbody>
+	{% for rule in object.get_rules %}
+	<tr>
+	  <td><a href="{{rule.get_absolute_url }}">{{rule.name}}</a></td>
+	  <td>{{rule.tag_regex}}</td>
+	</tr>
+	{% endfor %}
+      </tbody>
+    </table>      
+    
+  </div>
+  
 
+  <div class="col-md-2">
+    <div>
+      Used in 
     </div>
 
   </div>
