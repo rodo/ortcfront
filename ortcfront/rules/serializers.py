@@ -25,4 +25,5 @@ from .models import Rule
 class RuleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Rule
-        fields = ('id', 'name', 'tag_regex', 'node_applied')
+        fields = ('id', 'name', 'tag_regex', 'domains',
+                  'node_applied', 'way_applied')

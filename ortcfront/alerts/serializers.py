@@ -25,10 +25,10 @@ from .models import Alert, Event
 class AlertSerializer(serializers.ModelSerializer):
     class Meta:
         model = Alert
-        fields = ('id', 'name')
+        fields = ('id', 'name', 'domain', 'geozone')
 
 
 class EventSerializer(serializers.ModelSerializer):
     class Meta:
         model = Event
-        fields = ('id', 'item', 'osmid', 'changeset','rule','geom')
+        fields = ('id', 'alert', 'item', 'osmid', 'changeset', 'action', 'rule', 'geom')

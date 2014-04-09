@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% load i18n %}{% load compress %}{% load crispy_forms_tags %}
+{% block content %}
+<div class="row">
+  <div class="col-md-10">
+    <h3>{% trans "Alerts" %}</h3>
+    <table class="table table-striped">
+      <thead>
+	<tr>
+	  <th>{% trans "Name" %}</th>
+	  <th>{% trans "Domain" %}</th>
+	  <th>{% trans "GeoZone" %}</th>
+	</tr>
+      </thead>
+      <tbody>
+	{% for alert in object_list %}
+	<tr>
+	  <td><a href="{{alert.get_absolute_url}}">{{alert.name}}</a></td>
+	  <td><a href="{{alert.domain.get_absolute_url}}">{{alert.domain}}</a></td>
+	  <td><a href="{{alert.geozone.get_absolute_url}}">{{alert.geozone}}</a></td>
+
+	</tr>
+	{% endfor %}
+      </tbody>
+    </table>      
+  </div>
+
+  <div class="col-md-2">
+    <div>
+      <a href="feed/">feed</a>
+    </div>
+
+  </div>
+</div>
+{% endblock %}
+{% block rssnavbar %}<a href="feed/"><img id="rssicon" src="{{STATIC_URL}}img/rss_blue-32.png" /></a>{% endblock %}

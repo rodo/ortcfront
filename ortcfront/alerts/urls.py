@@ -18,13 +18,14 @@
 from django.conf.urls import patterns, include, url
 from django.contrib.auth.decorators import login_required
 from django.conf.urls import patterns, include, url
-from .views import AlertNewView, AlertEditView, AlertView
+from .views import AlertNewView, AlertEditView, AlertView, AlertListView
 from .views import GeozoneNewView, GeozoneEditView, GeozoneView, GeozoneGeoJSONView
-from .views import ListAlerts
+from .views import ListAlerts, LatestAlertsFeed
 from .models import Geozone
 
 urlpatterns = patterns('',
-                       url(r'^s/$', ListAlerts.as_view()),
+                       url(r'^s/feed/$', LatestAlertsFeed()),
+                       url(r'^s/$', AlertListView.as_view()),
                        url(r'^/new/$', login_required(AlertNewView.as_view()), name='alert_new'),
                        url(r'^/(?P<pk>\d+)/edit/$', login_required(AlertEditView.as_view())),
                        url(r'^/(?P<pk>\d+)/subscribe/$', 'ortcfront.alerts.views.subscribe', name='alert_subscribe'),

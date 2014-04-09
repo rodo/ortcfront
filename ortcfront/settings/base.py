@@ -112,7 +112,8 @@ import os.path
 PROJECT_DIR = os.path.dirname(__file__) # this is not Django setting.
 
 TEMPLATE_DIRS = (
-    os.path.join(PROJECT_DIR, "..", "templates"),
+    os.path.join(PROJECT_DIR, "..", "templates","default"),
+    #os.path.join(PROJECT_DIR, "..", "templates","sb-admin-v2"),
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
@@ -129,6 +130,7 @@ INSTALLED_APPS = (
     'django.contrib.gis',
     'registration',
     'compressor',
+    'haystack',
     'leaflet',
     'django_gravatar',
     'djgeojson',
@@ -139,6 +141,15 @@ INSTALLED_APPS = (
     'ortcfront.rules',
     'ortcfront.alerts'
 )
+
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
+        'PATH': os.path.join(os.path.dirname(__file__), 'whoosh_index'),
+    },
+}
+
+
 
 LEAFLET_CONFIG = {
     'DEFAULT_CENTER': (50.0, 5.0),

@@ -5,11 +5,14 @@ from django.conf.urls import patterns, include, url
 # admin.autodiscover()
 
 from .alerts.views import EventsList
+from .alerts.views import EventsFeed
 
 urlpatterns = patterns('',
+                       url(r'^search/', include('haystack.urls')),
                        url(r'^rule', include('ortcfront.rules.urls')),
                        url(r'^alert', include('ortcfront.alerts.urls')),
-                       url(r'^events/', EventsList.as_view()),
+                       url(r'^events/feed', EventsFeed()),
+                       url(r'^events/', 'ortcfront.users.views.home'),
                        url(r'^$', 'ortcfront.users.views.home', name='home'),
                        url(r'^accounts/profile/$', 'ortcfront.users.views.profile', name='profile'),
                        url(r'^accounts/', include('registration.backends.default.urls')),

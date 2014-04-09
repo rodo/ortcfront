@@ -43,8 +43,7 @@ from ortcfront.alerts.models import Event
 
 
 class JSONResponse(HttpResponse):
-    """
-    An HttpResponse that renders its content into JSON.
+    """An HttpResponse that renders its content into JSON.
     """
     def __init__(self, data, **kwargs):
         content = JSONRenderer().render(data)
@@ -174,3 +173,18 @@ class RuleView(DetailView):
         context = super(RuleView, self).get_context_data(**kwargs)
         context['events'] = Event.objects.filter(rule=self.object).order_by('-date_event')[0:10]
         return context
+
+    def render_to_response(self, context):
+        # Look for a 'format=json' GET argument
+        if self.request.GET.get('format') == 'json':
+            domains = []
+            for domain in self.object.domains.all():
+                domains.append(domain.id)
+            data = {'domains': domains}
+            #return JSONResponseMixin.render_to_response(self, context)
+            return JSONResponse(data)
+        else:
+            return DetailView.render_to_response(self, context)
+
+
+

@@ -3,12 +3,9 @@
 {% block content %}
 <div class="row">
   <div class="col-md-4">
-
+    <h3>{{object.name}}</h3>
     <div class="well">
       <ul>
-	<li>
-	  {% trans "Domain" %} : <a href="{{object.domain.get_absolute_url}}">{{object.name}}</a>
-	</li>
 	<li>
 	  {% trans "Created by" %} {{object.create_by.username}}
 	</li>
@@ -34,15 +31,10 @@
 	</tr>
 	{% endfor %}
       </tbody>
-    </table>      
-    
+    </table>
   </div>
-  
 
   <div class="col-md-2">
-    <div>
-      Used in 
-    </div>
 
   </div>
 </div>

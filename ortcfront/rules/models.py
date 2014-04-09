@@ -16,7 +16,7 @@
 #     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 """
-Models definition for llx app
+Models definition
 """
 from django.conf import settings
 from django.db import models
@@ -43,6 +43,9 @@ class Domain(models.Model):
     def get_rules(self):
         return Rule.objects.filter(domains=self)
     
+    def model(self):
+        return "Domain"
+
     def __unicode__(self):
         """The unicode method
         """
@@ -77,6 +80,9 @@ class Rule(models.Model):
     #
     # rules attached to this domain
     domains = models.ManyToManyField(Domain)
+
+    def model(self):
+        return "Rule"
 
     def get_absolute_url(self):
         return "/rule/{}/".format(self.id)

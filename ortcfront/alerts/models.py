@@ -18,6 +18,7 @@
 """
 Models definition
 """
+from django.conf import settings
 from django.db import models
 from django.contrib.gis.db import models as gismodels
 from django.contrib.auth.models import User
@@ -70,6 +71,9 @@ class Alert(models.Model):
     def get_rules(self):
         return Rule.objects.filter(domains=self.domain)
 
+    def get_events(self):
+        return Event.objects.filter(alert=self)
+
     def get_absolute_url(self):
         return "/alert/{}/".format(self.id)
 
@@ -96,10 +100,19 @@ class Alert(models.Model):
 class Event(models.Model):
     """An event pushed on the platform by osmrtcheck
     """
+    alert = models.ForeignKey(Alert)
     rule = models.ForeignKey(Rule)
     item = models.PositiveSmallIntegerField(choices=((1, 'node'),
                                                      (2, 'way'),
                                                      (3, 'relation')))
+
+    action = models.PositiveSmallIntegerField(choices=((1, 'create'),
+                                                       (2, 'delete'),
+                                                       (3, 'tagchange'),
+                                                       (4, 'tagdelete'),
+                                                       (5, 'tagcreate'),
+                                                       (6, 'topochange')))
+
     osmid = models.BigIntegerField()
     changeset = models.BigIntegerField()
     #
@@ -112,7 +125,33 @@ class Event(models.Model):
                                           null=True)
 
     class Meta:
-        unique_together = ('rule', 'osmid', 'changeset')
+        unique_together = ('alert', 'rule', 'osmid', 'changeset')
+
+    def get_absolute_url(self):
+        return "/events/"
+    
+    def action_str(self):
+        actions = {'1': 'create',
+                   '2': 'delete',
+                   '3': 'tagchange',
+                   '4': 'tagdelete',
+                   '5': 'tagcreate',
+                   '6': 'topochange'}
+        return actions[str(self.action)]
+        
+    def get_osmid_img(self):
+        return "20px-Osm_element_{}.svg.png".format(settings.OSM_ITEMS[str(self.item)])
+
+    def get_osmid_url(self):
+        return "{}/{}/{}".format(settings.OSM_WWW,
+                                 settings.OSM_ITEMS[str(self.item)],
+                                 self.osmid)
+
+    def get_changeset_url(self):
+        return "{}/changeset/{}".format(settings.OSM_WWW,
+                                        self.changeset)
+
+
 
 
 class Subscription(models.Model):

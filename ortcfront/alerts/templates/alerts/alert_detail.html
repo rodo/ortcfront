@@ -1,83 +1,100 @@
 {% extends "base.html" %}{% load leaflet_tags %}{% load geojson_tags %}
 {% load i18n %}{% load compress %}{% load crispy_forms_tags %}
 {% block title %} : {{object.name}}{% endblock %}
+{% block pagetitle %}{% trans "Alert" %} : {{object.name}}{% endblock %}
 {% block content %}
 <div class="row">
-  <div class="col-md-10">
-
-    <div class="row">
-      <div class="col-md-6">
-
-	<h3>{% trans "Alert" %} : {{object.name}}</h3>
-	<hr/>
-	<div>
-	  <ul>
-	    <li>
-	      {% trans "Domain" %} : <a href="{{object.domain.get_absolute_url}}">{{object.domain}}</a>
-	    </li>
-	    <li>
-	      {% trans "Created by" %} {{object.create_by.username}}
-	    </li>
-	    <li>
-	      {% trans "Created on" %} {{object.create_on}}
-	    </li>
-	    <li>Subscribers : <span class="badge">{{object.nb_subscribers}}</span></li>
-	    <li>Notifications : {{object.nb_notifications}}</li>
-	  </ul>
-	</div>
-
-	<table class="table table-striped">
-	  <thead>
-	    <tr>
-	      <th>{% trans "Rules" %}</th>
-	    </tr>
-	  </thead>
-	  <tbody>
-	    {% for rule in object.get_rules %}
-	    <tr>
-	      <td><a href="{{rule.get_absolute_url }}">{{rule.name}}</a></td>
-	      <td>{{rule.tag_regex}}</td>
-	    </tr>
-	    {% endfor %}
-	  </tbody>
-	</table>
-      </div>
-      <div class="col-md-6">
-	{% leaflet_map "alert_detail" callback="main_map_init" %}
-	{% if object.description %}
-	<hr/>
-
-	 <div>
-	   <div class="alert alert-info">
-
-	     {{object.description}}
-	   </div>
-	 </div>
-	 {% endif %}
-       </div>
-     </div>
-   </div>
-
-  <div class="col-md-2">
-      <p>
-	<a href="{% url 'alert_subscribe' object.id %}" class="btn btn-primary btn-block">{% trans "Subscribe" %}</a>
-      </p>
-
+  <div class="col-md-5">
     <div>
       <ul>
-
+	<li>
+	  {% trans "Domain" %} : <a href="{{object.domain.get_absolute_url}}">{{object.domain}}</a>
+	</li>
+	<li>
+	  {% trans "Created by" %} {{object.create_by.username}}
+	</li>
+	<li>
+	  {% trans "Created on" %} {{object.create_on}}
+	</li>
+	<li>Subscribers : <span class="badge">{{object.nb_subscribers}}</span></li>
+	<li>Notifications : {{object.nb_notifications}}</li>
       </ul>
     </div>
 
+    {% leaflet_map "alert_detail" callback="main_map_init" %}
+    {% if object.description %}
+    <hr/>
+    
     <div>
-      {% for subscriber in object.get_subscribers %}
-      <tr>
-	<td>{{subscriber.user.username}}</a></td>
-	<td>{{rule.tag_regex}}</td>
-      </tr>
-      {% endfor %}
+      <div class="alert alert-info">
+	{{object.description}}
+      </div>
+    </div>
+	 {% endif %}       
+  </div>
+
+  <div class="col-md-5">
+    <table class="table table-condensed">
+      <thead>
+	<tr>
+	  <th>{% trans "Last Events" %}</th>
+	</tr>
+      </thead>
+      <tbody>
+	{% for event in object.get_events %}
+	<tr>
+	  <td>{{event.action_str}}</td>
+	  <td><img src="{{STATIC_URL}}img/{{event.get_osmid_img}}" /></td>
+	  <td><a target="_blank" href="{{event.get_osmid_url}}">{{event.osmid}}</a></td>
+	  <td><a target="_blank" href="{{event.get_changeset_url}}">{{event.changeset}}</a></td>
+	</tr>
+	{% endfor %}
+      </tbody>
+    </table>
+
+  </div>
+  
+  <div class="col-md-2">
+    <div>
+      <p>
+	<a href="{% url 'alert_subscribe' object.id %}" class="btn btn-primary btn-block">{% trans "Subscribe" %}</a>
+      </p>
+    </div>
+    <div>
+      <table class="table table-striped">
+	<thead>
+	  <tr>
+	    <th>{% trans "Tag Rules" %}</th>
+	  </tr>
+	</thead>
+	<tbody>
+	  {% for rule in object.get_rules %}
+	  <tr>
+	    <td>{{rule.tag_regex}}</td>
+	  </tr>
+	  {% endfor %}
+	</tbody>
+      </table>
     </div>
 
+    <div>
+      <table class="table table-condensed">
+	<thead>
+	  <tr>
+	    <th>{% trans "Subscribers" %}</th>
+	  </tr>
+	</thead>
+	<tbody>
+	  {% for subscriber in object.get_subscribers %}
+	  <tr>
+	    <td>{{subscriber.user.username}}</td>
+	  </tr>
+	  {% endfor %}
+	</tbody>
+      </table>
+    </div>
+
+    
   </div>
 </div>
 <script type="text/javascript">

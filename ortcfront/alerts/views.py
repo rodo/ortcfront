@@ -18,10 +18,12 @@
 """
 
 """
+import logging
 from django.views.generic import DetailView, ListView, CreateView, UpdateView
 from django.core.urlresolvers import reverse, reverse_lazy
-from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from django.contrib.syndication.views import Feed
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import authentication, permissions, status
@@ -29,6 +31,38 @@ from djgeojson.views import GeoJSONLayerView
 from .models import Alert, Subscription, Geozone, Event
 from .serializers import AlertSerializer, EventSerializer
 from .forms import AlertNewForm, GeozoneNewForm
+
+logger = logging.getLogger(__name__)
+
+
+class EventsFeed(Feed):
+    title = "Events"
+    link = "/events/"
+    description = "Updates on each new events."
+
+    def items(self):
+        return Event.objects.order_by('-date_event')[:50]
+
+    def item_title(self, item):
+        return item.action_str()
+
+    def item_description(self, item):
+        return str(item.action)
+
+
+class LatestAlertsFeed(Feed):
+    title = "Alerts"
+    link = "/alerts/"
+    description = "Updates on each new alert created."
+
+    def items(self):
+        return Alert.objects.order_by('-create_on')[:5]
+
+    def item_title(self, item):
+        return item.name
+
+    def item_description(self, item):
+        return item.description
 
 
 class EventsList(APIView):
@@ -47,6 +81,9 @@ class EventsList(APIView):
 
 
     def post(self, request, format=None):
+        """An event is post
+        """
+        logger.debug('datas  %s' % (request.DATA))
         serializer = EventSerializer(data=request.DATA)
         if serializer.is_valid():
             serializer.save()
@@ -57,17 +94,25 @@ class EventsList(APIView):
 class ListAlerts(APIView):
     """View to list all alerts
     """
-    authentication_classes = (authentication.TokenAuthentication,)
-    #permission_classes = (permissions.IsAdminUser,)
 
     def get(self, request, format=None):
         """
         Return a list of all users.
         """
-        alerts = Alert.objects.all()
+        alerts = Alert.objects.filter(enable=True)
+        domainid = self.request.GET.get('domain')
+        if domainid:
+            alerts = alerts.filter(domain__id=domainid)
+
         serializer = AlertSerializer(alerts, many=True)
         return Response(serializer.data)
 
+
+class PostAlerts(APIView):
+    """View to list all alerts
+    """
+    authentication_classes = (authentication.TokenAuthentication,)
+    permission_classes = (permissions.IsAdminUser,)
 
     def post(self, request, format=None):
         serializer = AlertSerializer(data=request.DATA)
@@ -75,6 +120,8 @@ class ListAlerts(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
 
 
 class AlertNewView(CreateView):
@@ -111,6 +158,17 @@ class AlertView(DetailView):
     def get_context_data(self, **kwargs):
         context = super(AlertView, self).get_context_data(**kwargs)
         return context
+
+
+class AlertListView(ListView):
+    """List all the rules
+    """
+    model = Alert
+
+    def render_to_response(self, context):
+        # Look for a 'format=json' GET argument
+        return ListView.render_to_response(self, context)
+
 
 
 class GeozoneNewView(CreateView):
@@ -154,7 +212,6 @@ class GeozoneGeoJSONView(GeoJSONLayerView):
 
     def get_queryset(self):
         return Geozone.objects.filter(pk=self.kwargs['pk'])
-
 
 
 @login_required

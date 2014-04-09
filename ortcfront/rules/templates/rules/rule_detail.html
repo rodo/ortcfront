@@ -4,9 +4,9 @@
 {% block content %}
 <div class="row">
   <div class="col-md-4">
+    <h3>{{object.name}}</h3>
     <div class="well">
     <ul>
-      <li>{{object.name}}</li>
       <li>{{object.create_by.username}}</li>
       <li>{{object.create_on}}</li>
       <li>Use in #domains : {{object.domains.count}}

@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% load i18n %}{% load compress %}
+{% block content %}
+<div class="row">    
+  <div class="col-md-12">
+    <div>
+      <table class="table table-striped">
+	<thead>
+	  <tr>
+	    <th>{% trans "Date" %}</th>
+	    <th>{% trans "Alert" %}</th>
+	    <th>{% trans "Rule" %}</th>
+	  </tr>
+	</thead>
+	<tbody>
+	  {% for event in events %}
+	  <tr>
+	    <td>{{event.date_event}}</td>
+	    <td><a href="{{ event.alert.get_absolute_url }}">{{event.alert.name}}</a></td>
+	    <td>{{event.rule.tag_regex}}</td>
+	    <td>{{event.osmid}}</td>
+	    <td>{{event.changeset}}</td>
+	  </tr>
+	  {% endfor %}
+	</tbody>
+      </table>      
+    </div>    
+  </div>
+</div>
+{% endblock %}
