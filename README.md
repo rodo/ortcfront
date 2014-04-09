@@ -1,12 +1,14 @@
 OpenStreetMap Realtime Check Web Frontend
 =========================================
 
-Web frontend for osmrtcheck projets
+Web frontend for osmrtcheck project
 
 Dependencies
 ============
 
-- django
+- Django 1.6
+- haystack
+- PostgreSQL + PostGIS
 
 see requirements.txt for details
 
