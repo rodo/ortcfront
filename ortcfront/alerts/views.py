@@ -65,7 +65,12 @@ class LatestAlertsFeed(Feed):
         return item.description
 
 
-class EventsList(APIView):
+class EventsList(ListView):
+    """View to list all events
+    """
+    model = Event
+
+class EventsAPIList(APIView):
     """View to list all events
     """
     authentication_classes = (authentication.TokenAuthentication,)
@@ -73,12 +78,11 @@ class EventsList(APIView):
 
     def get(self, request, format=None):
         """
-        Return a list of all users.
+        Return a list of all events
         """
         events = Event.objects.all()
         serializer = EventSerializer(events, many=True)
         return Response(serializer.data)
-
 
     def post(self, request, format=None):
         """An event is post
@@ -89,23 +93,6 @@ class EventsList(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-class ListAlerts(APIView):
-    """View to list all alerts
-    """
-
-    def get(self, request, format=None):
-        """
-        Return a list of all users.
-        """
-        alerts = Alert.objects.filter(enable=True)
-        domainid = self.request.GET.get('domain')
-        if domainid:
-            alerts = alerts.filter(domain__id=domainid)
-
-        serializer = AlertSerializer(alerts, many=True)
-        return Response(serializer.data)
 
 
 class PostAlerts(APIView):
@@ -160,15 +147,45 @@ class AlertView(DetailView):
         return context
 
 
-class AlertListView(ListView):
+class EventView(DetailView):
+    """The public view
+    """
+    model = Event
+
+    def get_context_data(self, **kwargs):
+        context = super(EventView, self).get_context_data(**kwargs)
+        return context
+
+
+class ListAlerts(APIView):
+    """View to list all alerts
+    """
+
+    def get(self, request, format=None):
+        """
+        Return a list of all users.
+        """
+        alerts = Alert.objects.filter(enable=True)
+        domainid = self.request.GET.get('domain')
+        if domainid:
+            alerts = alerts.filter(domain__id=domainid)
+
+        serializer = AlertSerializer(alerts, many=True)
+        return Response(serializer.data)
+
+
+class AlertListView(ListView, ListAlerts):
     """List all the rules
     """
     model = Alert
 
     def render_to_response(self, context):
         # Look for a 'format=json' GET argument
-        return ListView.render_to_response(self, context)
-
+        if self.request.GET.get('format') == 'json':
+            return ListAlerts.get(self, self.request)
+        else:
+            # Look for a 'format=json' GET argument
+            return ListView.render_to_response(self, context)
 
 
 class GeozoneNewView(CreateView):
@@ -212,6 +229,14 @@ class GeozoneGeoJSONView(GeoJSONLayerView):
 
     def get_queryset(self):
         return Geozone.objects.filter(pk=self.kwargs['pk'])
+
+
+class EventGeoJSONView(GeoJSONLayerView):
+    model = Event
+
+    def get_queryset(self):
+        return Event.objects.filter(pk=self.kwargs['pk'])
+
 
 
 @login_required

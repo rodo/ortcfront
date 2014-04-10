@@ -30,7 +30,6 @@ from ortcfront.rules.models import Domain, Rule
 class Geozone(models.Model):
     """Geographical zone to filter alerts
     """
-
     name = models.CharField(max_length=30)
     description = models.TextField()
 
@@ -72,7 +71,7 @@ class Alert(models.Model):
         return Rule.objects.filter(domains=self.domain)
 
     def get_events(self):
-        return Event.objects.filter(alert=self)
+        return Event.objects.filter(alert=self).order_by('-date_event')
 
     def get_absolute_url(self):
         return "/alert/{}/".format(self.id)
@@ -102,6 +101,14 @@ class Event(models.Model):
     """
     alert = models.ForeignKey(Alert)
     rule = models.ForeignKey(Rule)
+
+    status = models.PositiveSmallIntegerField(default=1,
+                                              choices=((1, 'new'),
+                                                       (2, 'info'),
+                                                       (3, 'validate'),
+                                                       (4, 'error'),
+                                                       ))
+
     item = models.PositiveSmallIntegerField(choices=((1, 'node'),
                                                      (2, 'way'),
                                                      (3, 'relation')))
@@ -116,7 +123,7 @@ class Event(models.Model):
     osmid = models.BigIntegerField()
     changeset = models.BigIntegerField()
     #
-    geom = models.TextField(blank=True, null=True)
+    geom = gismodels.GeometryField()
     # non mandatory fields
     date_event = models.DateTimeField(auto_now_add=True)
     processed = models.BooleanField(default=False)
@@ -128,8 +135,24 @@ class Event(models.Model):
         unique_together = ('alert', 'rule', 'osmid', 'changeset')
 
     def get_absolute_url(self):
-        return "/events/"
+        return "/event/{}/".format(self.id)
     
+    def status_icon(self):
+        statuses = {'3': 'ok',
+                    '2': 'info',
+                    '1': 'question',
+                    '4': 'error'}
+        return statuses[str(self.status)]
+
+    def status_str(self):
+        statuses = {'1': 'new',
+                    '2': 'need info',                    
+                    '3': 'validate',
+                    '4': 'error'}
+        return statuses[str(self.status)]
+
+
+
     def action_str(self):
         actions = {'1': 'create',
                    '2': 'delete',

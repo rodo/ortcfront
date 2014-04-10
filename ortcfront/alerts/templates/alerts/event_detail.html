@@ -5,23 +5,32 @@
 {% block content %}
 <div class="row">
   <div class="col-md-5">
-    <div>
+    <h3>
+      {% if object.status == 1 %}<span class="label label-default">{{object.status_str}}</span>{% endif %}
+      {% if object.status == 2 %}<span class="label label-info">{{object.status_str}}</span>{% endif %}
+      {% if object.status == 3 %}<span class="label label-success">{{object.status_str}}</span>{% endif %}
+      {% if object.status == 4 %}<span class="label label-danger">{{object.status_str}}</span>{% endif %}
+    </h3>
+    
+    <div class="well">
       <ul>
 	<li>
-	  {% trans "Domain" %} : <a href="{{object.domain.get_absolute_url}}">{{object.domain}}</a>
+	  {% trans "Alert" %} : <a href="{{object.alert.get_absolute_url}}">{{object.alert}}</a>
 	</li>
 	<li>
-	  {% trans "Created by" %} {{object.create_by.username}}
+	  {% trans "Domain" %} : <a href="{{object.alert.domain.get_absolute_url}}">{{object.alert.domain}}</a>
 	</li>
 	<li>
-	  {% trans "Created on" %} {{object.create_on}}
+	  {% trans "Created on" %} {{object.date_event}}
 	</li>
-	<li>Subscribers : <span class="badge">{{object.nb_subscribers}}</span></li>
-	<li>Notifications : {{object.nb_notifications}}</li>
+	<li>{% trans "Action" %} {{object.action_str}}</li>
+
+	<li>OSMID <a target="_blank" href="{{event.get_osmid_url}}">{{event.osmid}}</a></li>
+	<li>Changeset : <a target="_blank" href="{{event.get_changeset_url}}">{{event.changeset}}</a></li>
+
       </ul>
     </div>
 
-    {% leaflet_map "alert_detail" callback="main_map_init" %}
     {% if object.description %}
     <hr/>
     
@@ -34,31 +43,7 @@
   </div>
 
   <div class="col-md-5">
-    {% trans "Last Events" %}
-    <table class="table table-condensed">
-      <thead>
-	<tr>
-	  <th></th>
-	  <th>{% trans "Action" %}</th>
-	</tr>
-      </thead>
-      <tbody>
-	{% for event in object.get_events %}
-	<tr>
-	  <td><a class="btn btn-default" href="{{event.get_absolute_url}}"><span class="glyphicon glyphicon-eye-open"></span></a></td>
-	  <td> {{event.action_str}}</td>
-	  <td><img src="{{STATIC_URL}}img/{{event.get_osmid_img}}" /></td>
-	  <td><a target="_blank" href="{{event.get_osmid_url}}">{{event.osmid}}</a></td>
-	  <td><a target="_blank" href="{{event.get_changeset_url}}">{{event.changeset}}</a></td>
-	  <td>
-	    <span class="glyphicon glyphicon-{{event.status_icon}}-sign"></span>
-	  </td>
-
-	</tr>
-	{% endfor %}
-      </tbody>
-    </table>
-
+    {% leaflet_map "alert_detail" callback="main_map_init" %}
   </div>
   
   <div class="col-md-2">
@@ -109,7 +94,7 @@
 
   var layer = L.geoJson();
   map.addLayer(layer);
-  $.getJSON("{% url 'geozone_geojson' object.geozone.id %}", function (data) {
+  $.getJSON("{% url 'event_geojson' object.id %}", function (data) {
     layer.addData(data);
     map.fitBounds(layer.getBounds());
   });

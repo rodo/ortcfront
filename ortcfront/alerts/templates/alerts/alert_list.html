@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load i18n %}{% load compress %}{% load crispy_forms_tags %}
+{% block rssnavbar %}<a href="feed/"><img id="rssicon" src="{{STATIC_URL}}img/rss_blue-32.png" /></a>{% endblock %}
 {% block content %}
 <div class="row">
   <div class="col-md-10">
@@ -27,10 +28,10 @@
 
   <div class="col-md-2">
     <div>
-      <a href="feed/">feed</a>
+          {% include "buttons.html" %}
     </div>
 
   </div>
 </div>
 {% endblock %}
-{% block rssnavbar %}<a href="feed/"><img id="rssicon" src="{{STATIC_URL}}img/rss_blue-32.png" /></a>{% endblock %}
+

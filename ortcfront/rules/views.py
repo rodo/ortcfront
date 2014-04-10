@@ -25,12 +25,13 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.views.decorators.cache import cache_page
 from django.conf import settings
 from django.http import HttpResponse
+from django.contrib.syndication.views import Feed
 from rest_framework.renderers import JSONRenderer
 from rest_framework.parsers import JSONParser
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import authentication, permissions, status
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, render_to_response
 from django.contrib.auth.decorators import login_required
 from django.views.generic import (DetailView, ListView, CreateView,
                                   UpdateView, TemplateView)
@@ -40,6 +41,23 @@ from ortcfront.rules.forms import DomainNewForm, RuleNewForm
 from ortcfront.rules.serializers import RuleSerializer
 from django.core.urlresolvers import reverse, reverse_lazy
 from ortcfront.alerts.models import Event
+
+
+class RuleFeed(Feed):
+    title = "Rules"
+    link = "/rules/"
+    description = "Update occurs on each new created rule."
+
+    def items(self):
+        return Rule.objects.order_by('-create_on')[:15]
+
+    def item_title(self, item):
+        return item.name
+
+    def item_description(self, item):
+        content = render_to_response("rules/rule_feed_description.html",
+                                     {'item': item})
+        return content.content
 
 
 class JSONResponse(HttpResponse):

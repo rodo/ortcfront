@@ -18,10 +18,10 @@
 from django.conf.urls import patterns, include, url
 from django.contrib.auth.decorators import login_required
 from .views import DomainNewView, DomainEditView, DomainView
-from .views import RuleNewView, RuleEditView, RuleView, RuleListView
+from .views import RuleNewView, RuleEditView, RuleView, RuleListView, RuleFeed
 
 urlpatterns = patterns('',
-
+                       url(r'^s/feed/$', RuleFeed()),
                        url(r'^s/(?P<element>node|way|relation|all)/(?P<action>create|delete|modify|all]$)/', RuleListView.as_view()),
                        url(r'^s/(?P<element>node|way|relation|all)/$', RuleListView.as_view()),
                        url(r'^s/$', RuleListView.as_view()),

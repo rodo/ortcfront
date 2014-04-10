@@ -1,12 +1,18 @@
 {% extends "base.html" %}
 {% load i18n %}{% load compress %}{% load crispy_forms_tags %}
+{% block rssnavbar %}<a href="feed/"><img id="rssicon" src="{{STATIC_URL}}img/rss_blue-32.png" /></a>{% endblock %}
 {% block content %}
 <div class="row">
-  <div class="col-md-8">
+  <div class="col-md-10">
     <table class="table table-striped">
       <thead>
 	<tr>
 	  <th>{% trans "Rules" %}</th>
+	  <th>{% trans "Tag Regex" %}</th>
+	  <th>{% trans "Objects" %}</th>
+	  <th>{% trans "Create" %}</th>
+	  <th>{% trans "Delete" %}</th>
+	  <th>{% trans "Modify" %}</th>
 	</tr>
       </thead>
       <tbody>
@@ -18,17 +24,19 @@
 	    {% if rule.node_applied %}<img src="{{STATIC_URL}}img/20px-Osm_element_node.svg.png" />{% endif %}
 	    {% if rule.way_applied %}<img src="{{STATIC_URL}}img/20px-Osm_element_way.svg.png" />{% endif %}
 	    {% if rule.relation_applied %}<img src="{{STATIC_URL}}img/20px-Osm_element_relation.svg.png" />{% endif %}
-
 	  </td>
+	  <td>{% if rule.create_applied %}<span class="glyphicon glyphicon-ok"></span>{% endif %}</td>
+	  <td>{% if rule.delete_applied %}<span class="glyphicon glyphicon-ok"></span>{% endif %}</td>
+	  <td>{% if rule.modify_applied %}<span class="glyphicon glyphicon-ok"></span>{% endif %}</td>
 	</tr>
 	{% endfor %}
       </tbody>
     </table>      
   </div>
 
-  <div class="col-md-4">
+  <div class="col-md-2">
     <div>
-
+      {% include "buttons.html" %}
     </div>
 
   </div>

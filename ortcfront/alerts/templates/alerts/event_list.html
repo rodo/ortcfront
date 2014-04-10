@@ -1,8 +1,37 @@
 {% extends "base.html" %}
 {% load i18n %}{% load compress %}
+{% block rssnavbar %}<a href="feed/"><img id="rssicon" src="{{STATIC_URL}}img/rss_blue-32.png" /></a>{% endblock %}
 {% block content %}
 <div class="row">
   <div class="col-md-10">
+    <h3>{% trans "Alerts" %}</h3>
+    <table class="table table-striped">
+      <thead>
+	<tr>
+	  <th>{% trans "Alert" %}</th>
+	  <th>{% trans "Action" %}</th>
+	  <th>{% trans "Object" %}</th>
+	  <th>{% trans "OSMID" %}</th>
+	  <th>{% trans "Changeset" %}</th>
+	</tr>
+      </thead>
+      <tbody>
+	{% for event in object_list %}
+	<tr>
+	  <td><a href="{{event.alert.get_absolute_url}}">{{event.alert.name}}</a></td>
+	  <td>{{event.action_str}}</td>
+	  <td><img src="{{STATIC_URL}}img/{{event.get_osmid_img}}" /></td>
+	  <td><a target="_blank" href="{{event.get_osmid_url}}">{{event.osmid}}</a></td>
+	  <td><a target="_blank" href="{{event.get_changeset_url}}">{{event.changeset}}</a></td>
+	  <td>
+	    <span class="glyphicon glyphicon-{{event.status_icon}}-sign"></span>
+	  </td>
+
+
+	</tr>
+	{% endfor %}
+      </tbody>
+    </table>      
 
   </div>
 
