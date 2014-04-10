@@ -24,13 +24,14 @@ from django.core.urlresolvers import reverse, reverse_lazy
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.syndication.views import Feed
+from django.http import HttpResponseRedirect
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import authentication, permissions, status
 from djgeojson.views import GeoJSONLayerView
-from .models import Alert, Subscription, Geozone, Event
+from .models import Alert, Subscription, Geozone, Event, Report
 from .serializers import AlertSerializer, EventSerializer
-from .forms import AlertNewForm, GeozoneNewForm
+from .forms import AlertNewForm, GeozoneNewForm, ReportNewForm
 
 logger = logging.getLogger(__name__)
 
@@ -154,7 +155,20 @@ class EventView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(EventView, self).get_context_data(**kwargs)
+        context['form'] = ReportNewForm()
+        context['reports'] = Report.objects.filter(event=self.object).order_by('-create_on')
         return context
+
+    def post(self, request, pk):
+        event = Event.objects.get(pk=pk)
+        form = ReportNewForm(request.POST)
+        if form.is_valid():
+            Report.objects.create(author=request.user,
+                                  event=event,
+                                  comment=form.cleaned_data['comment'],
+                                  status=form.cleaned_data['status'])
+
+        return HttpResponseRedirect(reverse('event_view', args=[pk]))
 
 
 class ListAlerts(APIView):

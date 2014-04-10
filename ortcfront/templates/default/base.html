@@ -25,6 +25,7 @@
     </style>
     {% leaflet_css plugins="forms" %}
     {% compress css %}
+    <link href="{{STATIC_URL}}css/ortcfront.css" rel="stylesheet">
     {% block cssheaders %}{% endblock %}
     {% endcompress %}
     <!-- jsheaders -->

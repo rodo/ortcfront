@@ -159,8 +159,6 @@ class Event(models.Model):
                     '4': 'error'}
         return statuses[str(self.status)]
 
-
-
     def action_str(self):
         actions = {'1': 'create',
                    '2': 'delete',
@@ -182,6 +180,28 @@ class Event(models.Model):
         return "{}/changeset/{}".format(settings.OSM_WWW,
                                         self.changeset)
 
+
+class Report(models.Model):
+    """An report made on an event
+    """
+    author = models.ForeignKey(User)
+    event = models.ForeignKey(Event)
+    comment = models.TextField()
+
+    status = models.PositiveSmallIntegerField(default=3,
+                                              choices=((3, 'validate'),
+                                                       (2, 'info'),
+                                                       (4, 'error'),
+                                                       ))
+
+    create_on = models.DateTimeField(auto_now_add=True)
+
+    def status_str(self):
+        statuses = {
+                    '2': 'need info',                    
+                    '3': 'validate',
+                    '4': 'error'}
+        return statuses[str(self.status)]
 
 
 

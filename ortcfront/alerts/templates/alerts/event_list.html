@@ -7,7 +7,7 @@
     <h3>{% trans "Alerts" %}</h3>
     <table class="table table-striped">
       <thead>
-	<tr>
+	<tr><th></th>
 	  <th>{% trans "Alert" %}</th>
 	  <th>{% trans "Action" %}</th>
 	  <th>{% trans "Object" %}</th>
@@ -18,16 +18,18 @@
       <tbody>
 	{% for event in object_list %}
 	<tr>
+	  <td><a class="btn btn-default btn-xs" href="{{event.get_absolute_url}}"><span class="glyphicon glyphicon-eye-open"></span></a></td>
 	  <td><a href="{{event.alert.get_absolute_url}}">{{event.alert.name}}</a></td>
 	  <td>{{event.action_str}}</td>
 	  <td><img src="{{STATIC_URL}}img/{{event.get_osmid_img}}" /></td>
 	  <td><a target="_blank" href="{{event.get_osmid_url}}">{{event.osmid}}</a></td>
 	  <td><a target="_blank" href="{{event.get_changeset_url}}">{{event.changeset}}</a></td>
 	  <td>
-	    <span class="glyphicon glyphicon-{{event.status_icon}}-sign"></span>
+	    {% if event.status == 1 %}<span class="label label-default">{{event.status_str}}</span>{% endif %}
+	    {% if event.status == 2 %}<span class="label label-info">{{event.status_str}}</span>{% endif %}
+	    {% if event.status == 3 %}<span class="label label-success">{{event.status_str}}</span>{% endif %}
+	    {% if event.status == 4 %}<span class="label label-danger">{{event.status_str}}</span>{% endif %}
 	  </td>
-
-
 	</tr>
 	{% endfor %}
       </tbody>

@@ -23,7 +23,7 @@ from crispy_forms.helper import FormHelper
 from crispy_forms import layout
 from crispy_forms.bootstrap import PrependedText, FormActions, InlineRadios
 from leaflet.forms.widgets import LeafletWidget
-from .models import Alert, Geozone
+from .models import Alert, Geozone, Report
 
 
 class GeozoneNewForm(forms.ModelForm):
@@ -86,5 +86,25 @@ class AlertNewForm(forms.ModelForm):
         FormActions(
             layout.Submit('save_changes', 'Save', css_class="btn-primary"),
             layout.Submit('cancel', 'Cancel', css_class="btn-danger"),
+            )
+        )
+
+
+class ReportNewForm(forms.ModelForm):
+    """Use to create a new report
+    """
+    class Meta:
+        model = Report
+        fields = ['status', 'comment']
+
+    helper = FormHelper()
+    helper.form_class = 'form-horizontal'
+    helper.label_class = 'col-lg-2'
+    helper.field_class = 'col-lg-10'
+    helper.layout = layout.Layout(
+        InlineRadios('status'),
+        layout.Field('comment', rows="3"),
+        FormActions(
+            layout.Submit('save_changes', 'Save', css_class="btn-primary"),
             )
         )

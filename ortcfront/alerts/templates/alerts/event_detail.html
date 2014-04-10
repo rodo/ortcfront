@@ -21,29 +21,71 @@
 	  {% trans "Domain" %} : <a href="{{object.alert.domain.get_absolute_url}}">{{object.alert.domain}}</a>
 	</li>
 	<li>
-	  {% trans "Created on" %} {{object.date_event}}
+	  {% trans "Occurs on" %} {{object.date_event}}
 	</li>
-	<li>{% trans "Action" %} {{object.action_str}}</li>
-
 	<li>OSMID <a target="_blank" href="{{event.get_osmid_url}}">{{event.osmid}}</a></li>
 	<li>Changeset : <a target="_blank" href="{{event.get_changeset_url}}">{{event.changeset}}</a></li>
-
       </ul>
     </div>
-
-    {% if object.description %}
-    <hr/>
-    
     <div>
-      <div class="alert alert-info">
-	{{object.description}}
-      </div>
+      <table class="table table-condensed">
+	<thead>
+	  <tr>
+	    <th>{% trans "Action" %} : {{object.action_str}}</th>
+	  </tr>
+	</thead>
+	<tbody>
+	  <tr>
+	    <td>
+
+	    </td>
+	  </tr>
+	</tbody>
+      </table>
     </div>
-	 {% endif %}       
+    <div>
+      <table class="table table-condensed">
+	<thead>
+	  <tr>
+	    <th>{% trans "Reports" %}</th>
+	  </tr>
+	</thead>
+	<tbody>
+	  {% for report in reports %}
+	  <tr>
+	    <td>
+	      <div>
+	      {% if report.status == 1 %}<span class="label label-default">{{report.status_str}}</span>{% endif %}
+	      {% if report.status == 2 %}<span class="label label-info">{{report.status_str}}</span>{% endif %}
+	      {% if report.status == 3 %}<span class="label label-success">{{report.status_str}}</span>{% endif %}
+	      {% if report.status == 4 %}<span class="label label-danger">{{report.status_str}}</span>{% endif %}	      
+	      by <span>{{report.author.username}}</<span> <span class="tiny-date">{{report.create_on}}</span>
+	      </div>
+	      <div>
+		{{report.comment}}
+	      </div>
+	      <div>
+
+	      </div>
+
+	    </td>
+	  </tr>
+	  {% endfor %}
+	</tbody>
+      </table>
+    </div>
+
   </div>
 
   <div class="col-md-5">
     {% leaflet_map "alert_detail" callback="main_map_init" %}
+    <hr/>
+    <h3>Make a report</h3>
+    {% if user.is_authenticated %}
+    {% crispy form %}
+    {% else %}
+    <div>Please <a href="{% url 'auth_login' %}">log in</a> to make a report</a></div>
+    {% endif %}
   </div>
   
   <div class="col-md-2">
@@ -51,39 +93,6 @@
       <p>
 	<a href="{% url 'alert_subscribe' object.id %}" class="btn btn-primary btn-block">{% trans "Subscribe" %}</a>
       </p>
-    </div>
-    <div>
-      <table class="table table-striped">
-	<thead>
-	  <tr>
-	    <th>{% trans "Tag Rules" %}</th>
-	  </tr>
-	</thead>
-	<tbody>
-	  {% for rule in object.get_rules %}
-	  <tr>
-	    <td>{{rule.tag_regex}}</td>
-	  </tr>
-	  {% endfor %}
-	</tbody>
-      </table>
-    </div>
-
-    <div>
-      <table class="table table-condensed">
-	<thead>
-	  <tr>
-	    <th>{% trans "Subscribers" %}</th>
-	  </tr>
-	</thead>
-	<tbody>
-	  {% for subscriber in object.get_subscribers %}
-	  <tr>
-	    <td>{{subscriber.user.username}}</td>
-	  </tr>
-	  {% endfor %}
-	</tbody>
-      </table>
     </div>
 
     
