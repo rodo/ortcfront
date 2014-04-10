@@ -64,7 +64,7 @@ class RuleNewForm(forms.ModelForm):
                   'node_applied', 'way_applied', 'relation_applied',
                   'create_applied', 'modify_applied', 'delete_applied']
 
-    name = forms.CharField(max_length=30,
+    name = forms.CharField(max_length=50,
                            required=True,
                            label="Nom",
                            widget=TextInput())

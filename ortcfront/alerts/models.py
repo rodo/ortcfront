@@ -20,17 +20,19 @@ Models definition
 """
 from django.conf import settings
 from django.db import models
+from django.core.mail import mail_admins
 from django.contrib.gis.db import models as gismodels
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.contrib.gis.geos import GEOSGeometry
+from django.template.loader import render_to_string
 from ortcfront.rules.models import Domain, Rule
 
 
 class Geozone(models.Model):
     """Geographical zone to filter alerts
     """
-    name = models.CharField(max_length=30)
+    name = models.CharField(max_length=50)
     description = models.TextField()
 
     create_by = models.ForeignKey(User)
@@ -54,7 +56,7 @@ class Geozone(models.Model):
 class Alert(models.Model):
     """
     """
-    name = models.CharField(max_length=30)
+    name = models.CharField(max_length=50)
     description = models.TextField()
     domain = models.ForeignKey(Domain)
     geozone = models.ForeignKey(Geozone)
@@ -84,6 +86,12 @@ class Alert(models.Model):
 
     def nb_notifications(self):
         return Notification.objects.filter(alert=self).count()
+
+    def synopsis(self):
+        """Main information in a little string
+        """
+        return render_to_string("alerts/alert_synopsis.txt",
+                                {'item': self})
 
     def __unicode__(self):
         """The unicode method
@@ -211,5 +219,13 @@ def auto_subscribe_alert(sender, instance, created, **kwargs):
         Subscription.objects.create(user=instance.create_by,
                                     alert=instance)
 
+
+def inform_admin(sender, instance, created, **kwargs):
+    if created:
+        mail_admins("New alert created",
+                    instance.synopsis())
+
+
 post_save.connect(analyze_event, sender=Event)
 post_save.connect(auto_subscribe_alert, sender=Alert)
+post_save.connect(inform_admin, sender=Alert)
