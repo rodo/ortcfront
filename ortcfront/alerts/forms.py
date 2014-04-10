@@ -50,7 +50,7 @@ class GeozoneNewForm(forms.ModelForm):
     helper.layout = layout.Layout(
         layout.Field('name'),
         layout.Field('geom'),
-        layout.Field('description'),
+        layout.Field('description', rows='3'),
         FormActions(
             layout.Submit('save_changes', 'Save', css_class="btn-primary"),
             layout.Submit('cancel', 'Cancel', css_class="btn-danger"),

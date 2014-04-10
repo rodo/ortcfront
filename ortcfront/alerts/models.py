@@ -26,6 +26,7 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.contrib.gis.geos import GEOSGeometry
 from django.template.loader import render_to_string
+from django.core.urlresolvers import reverse
 from ortcfront.rules.models import Domain, Rule
 
 
@@ -42,6 +43,12 @@ class Geozone(models.Model):
 
     objects = gismodels.GeoManager()
 
+    def model(self):
+        return "Geo Zone"
+
+    def get_absolute_url(self):
+        return reverse("geozone_view", kwargs={'pk': self.id})
+
     def __unicode__(self):
         """The unicode method
         """
@@ -51,6 +58,7 @@ class Geozone(models.Model):
         """The string method
         """
         return self.name
+
 
 
 class Alert(models.Model):

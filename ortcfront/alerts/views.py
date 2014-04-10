@@ -223,10 +223,6 @@ class GeozoneEditView(UpdateView):
     form_class = GeozoneNewForm
     success_url = reverse_lazy('profile')
 
-    def get_context_data(self, **kwargs):
-        context = super(GeozoneEditView, self).get_context_data(**kwargs)
-        return context
-
 
 class GeozoneView(DetailView):
     """The public view
