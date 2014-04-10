@@ -1,0 +1,8 @@
+Alert
+=====
+
+Name : {{item.name}}
+Desc : {{item.description}}
+
+{{item.create_by.username}}
+{{item.create_on}}

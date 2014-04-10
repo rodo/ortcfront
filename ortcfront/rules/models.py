@@ -27,7 +27,7 @@ from django.db.models.signals import post_save
 class Domain(models.Model):
     """Domaines
     """
-    name = models.CharField(max_length=30)
+    name = models.CharField(max_length=50)
     description = models.TextField()
 
     # is the domain 
@@ -60,7 +60,7 @@ class Domain(models.Model):
 class Rule(models.Model):
     """
     """
-    name = models.CharField(max_length=30)
+    name = models.CharField(max_length=50)
     tag_regex = models.CharField(max_length=100)
     active = models.BooleanField(default=True)
     # 
