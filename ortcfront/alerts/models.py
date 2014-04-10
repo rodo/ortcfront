@@ -197,7 +197,7 @@ class Report(models.Model):
     create_on = models.DateTimeField(auto_now_add=True)
 
     def status_str(self):
-        statuses = {
+        statuses = {'1': 'new',
                     '2': 'need info',                    
                     '3': 'validate',
                     '4': 'error'}

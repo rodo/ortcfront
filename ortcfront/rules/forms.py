@@ -17,12 +17,35 @@
 #
 # Forms
 #
+import re
 from django import forms
+from django.core.validators import MinLengthValidator
+from django.core.exceptions import ValidationError
 from django.forms.widgets import Textarea, Select, TextInput, HiddenInput
 from crispy_forms.helper import FormHelper
 from crispy_forms import layout
 from crispy_forms.bootstrap import PrependedText, FormActions, InlineRadios
 from .models import Domain, Rule
+
+
+def exclude_regex(value):
+    """Exclude some too dangerous regex
+
+    - TODO add more and improve
+    """
+    if value == ".*.*":
+        raise ValidationError('%s is not a valid regex' % value)
+
+def validate_regex(value):
+    """Exclude some too dangerous regex
+
+    - TODO add more and improve
+    """
+    try:
+        res = re.compile(value)
+    except:
+        raise ValidationError('%s is an invalid regex' % value)
+
 
 
 class DomainNewForm(forms.ModelForm):
@@ -71,6 +94,9 @@ class RuleNewForm(forms.ModelForm):
 
     tag_regex = forms.CharField(max_length=100,
                                 required=True,
+                                validators=[MinLengthValidator(4),
+                                            validate_regex,
+                                            exclude_regex],
                                 widget=TextInput())
 
     helper = FormHelper()
@@ -93,3 +119,5 @@ class RuleNewForm(forms.ModelForm):
             layout.Submit('cancel', 'Annuler', css_class="btn-danger"),
             )
         )
+
+
