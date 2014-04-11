@@ -23,12 +23,14 @@ from django.views.generic.base import RedirectView
 from .views import AlertNewView, AlertEditView, AlertView, AlertListView
 from .views import GeozoneNewView, GeozoneEditView, GeozoneView, GeozoneGeoJSONView
 from .views import ListAlerts, LatestAlertsFeed
+from views import EventsFeed
 from .models import Geozone
 
 urlpatterns = patterns('',
                        url(r'^s/feed/$', LatestAlertsFeed()),
                        url(r'^s/$', AlertListView.as_view(), name='alert_list'),
                        url(r'^/new/$', login_required(AlertNewView.as_view()), name='alert_new'),
+                       url(r'^/(?P<alert_id>\d+)/events/feed/$', EventsFeed()),
                        url(r'^/(?P<pk>\d+)/edit/$', login_required(AlertEditView.as_view())),
                        url(r'^/(?P<pk>\d+)/subscribe/$', 'ortcfront.alerts.views.subscribe', name='alert_subscribe'),
                        url(r'^/(?P<pk>\d+)/$', AlertView.as_view()),

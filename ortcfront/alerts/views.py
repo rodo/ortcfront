@@ -27,6 +27,7 @@ from django.template.loader import render_to_string
 from django.contrib.auth.decorators import login_required
 from django.contrib.syndication.views import Feed
 from django.http import HttpResponseRedirect
+from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import authentication, permissions, status
@@ -43,8 +44,17 @@ class EventsFeed(Feed):
     link = "/events/"
     description = "Updates on each new events."
 
-    def items(self):
-        return Event.objects.order_by('-date_event')[:50]
+    def get_object(self, request, alert_id=0):
+        if alert_id != 0:
+            return get_object_or_404(Alert, pk=alert_id)
+        else:
+            return None
+
+    def items(self, obj):
+        qry = Event.objects.all()
+        if obj:
+            qry = qry.filter(alert=obj)
+        return qry.order_by('-date_event')[:20]
 
     def item_title(self, item):
         content = render_to_string("alerts/event_feed_title.html", 
