@@ -188,6 +188,10 @@ OSM_ITEMS = {'1': 'node',
 # Syslog name
 #
 SYSLOG_NAME = 'ortcfront'
+#
+# Default pagination
+#
+ORCT_PAGINATE_DEFAULT=20
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to

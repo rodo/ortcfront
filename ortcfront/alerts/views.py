@@ -19,6 +19,7 @@
 
 """
 import logging
+from django.conf import settings
 from django.views.generic import DetailView, ListView, CreateView, UpdateView
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.shortcuts import render, redirect
@@ -70,6 +71,7 @@ class EventsList(ListView):
     """View to list all events
     """
     model = Event
+    paginate_by=settings.ORCT_PAGINATE_DEFAULT
 
 class EventsAPIList(APIView):
     """View to list all events
@@ -192,6 +194,7 @@ class AlertListView(ListView, ListAlerts):
     """List all the rules
     """
     model = Alert
+    paginate_by=settings.ORCT_PAGINATE_DEFAULT
 
     def render_to_response(self, context):
         # Look for a 'format=json' GET argument

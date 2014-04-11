@@ -74,6 +74,7 @@ class RuleListView(ListView):
     """List all the rules
     """
     model = Rule
+    paginate_by=settings.ORCT_PAGINATE_DEFAULT
 
     def get_queryset(self):
         query = Rule.objects.filter(active=True).order_by('-create_on')
