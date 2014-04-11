@@ -1,0 +1,7 @@
+<p>{{event.create_on}} {{event.create_by}}</p>
+<ul>
+<li>Alert <a href="{{event.alert.get_absolute_url}}">{{event.alert.name}}</a></li>
+<li>Action : {{event.action_str}}</li>
+<li>Status : {{event.status_str}}</li>
+<li>OSM object : <a href="{{event.get_osmid_url}}">{{event.osmid}}</a></li>
+</ul>

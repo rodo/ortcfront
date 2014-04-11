@@ -22,7 +22,8 @@ import logging
 from django.conf import settings
 from django.views.generic import DetailView, ListView, CreateView, UpdateView
 from django.core.urlresolvers import reverse, reverse_lazy
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, render_to_response
+from django.template.loader import render_to_string
 from django.contrib.auth.decorators import login_required
 from django.contrib.syndication.views import Feed
 from django.http import HttpResponseRedirect
@@ -38,7 +39,7 @@ logger = logging.getLogger(__name__)
 
 
 class EventsFeed(Feed):
-    title = "Events"
+    title = "OpenStreetMap realtime check - Events"
     link = "/events/"
     description = "Updates on each new events."
 
@@ -46,14 +47,18 @@ class EventsFeed(Feed):
         return Event.objects.order_by('-date_event')[:50]
 
     def item_title(self, item):
-        return item.action_str()
+        content = render_to_string("alerts/event_feed_title.html", 
+                                   {'event': item})
+        return content
 
     def item_description(self, item):
-        return str(item.action)
+        content = render_to_response("alerts/event_feed_description.html",
+                                     {'event': item})
+        return content.content
 
 
 class LatestAlertsFeed(Feed):
-    title = "Alerts"
+    title = "OpenStreetMap realtime check - Alerts"
     link = "/alerts/"
     description = "Updates on each new alert created."
 
@@ -73,6 +78,20 @@ class EventsList(ListView):
     model = Event
     paginate_by=settings.ORCT_PAGINATE_DEFAULT
 
+    def get_queryset(self):
+        """Filter
+
+        TODO : finish this filter
+        """
+        qry = Event.objects.all()
+        try:
+            status = int(self.request.GET.get('status'))
+            qry = Event.objects.filter(status=status)
+        except:
+            pass
+        return qry
+
+                
 class EventsAPIList(APIView):
     """View to list all events
     """
