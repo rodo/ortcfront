@@ -70,10 +70,10 @@
 	      {% if user.is_authenticated %}
 	      <li>{% gravatar user.email 40 %}</li>
 	      <li><a href="/accounts/profile/">{{ user.username }}</a></li>
-	      <li><a href="/accounts/logout/">Déconnexion</a></li>
 	      {% else %}
-	      <li><a href="/accounts/login/">Se connecter</a></li>
+	      <li><a href="/accounts/login/">{% trans "Sign in" %}</a></li>
 	      {% endif %}
+	      <li><a href="/p/contact/">{% trans "Contact" %}</a></li>
 	    </ul>
 
 	    <form id="formnavsearch" class="navbar-form navbar-right" action="/search/">

@@ -6,37 +6,37 @@
   </div>
   <div class="col-md-6">
 
-    <h2>{% trans "Créer un compte" %}</h2>
+    <h2>{% trans "Create a new account" %}</h2>
 
     <div class="well">
 
       <form method="post" action=".">
 	{% csrf_token %}
 	<div class="form-group">
-	  <label for="exampleInputEmail1">Username</label>
+	  <label for="exampleInputEmail1">{% trans "Username" %}</label>
 	  <input name="username" type="text" class="form-control" id="exampleInputEmail1" placeholder="login" required autofocus>
 	  {{form.username.errors}}
 	</div>
 
 	<div class="form-group">
-	  <label for="exampleInputEmail1">Email address</label>
+	  <label for="exampleInputEmail1">{% trans "Email address" %}</label>
 	  <input name="email" type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email" required autofocus>
 	  {{form.email.errors}}
 	</div>
 
 	<div class="form-group">
-	  <label for="exampleInputPassword1">Password</label>
+	  <label for="exampleInputPassword1">{% trans "Password" %}</label>
 	  <input name="password1" type="password" class="form-control"id="exampleInputPassword1" placeholder="Password" required autofocus>
 	  {{form.password1.errors}}
 	</div>
 
 	<div class="form-group">
-	  <label for="exampleInputPassword1">Password verification</label>
+	  <label for="exampleInputPassword1">{% trans "Password verification" %}</label>
 	  <input name="password2" type="password" class="form-control"id="exampleInputPassword1" placeholder="Password" required autofocus>
 	  {{form.password2.errors}}
 	</div>
 
-	<input type="submit" class="btn btn-primary" value="{% trans 'Envoyer !' %}" />
+	<input type="submit" class="btn btn-primary" value="{% trans 'Create !' %}" />
       </form>
     </div>
 

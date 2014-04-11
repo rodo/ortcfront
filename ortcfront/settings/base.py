@@ -139,6 +139,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.admin',
     'django.contrib.gis',
+    'django.contrib.flatpages',
     'registration',
     'compressor',
     'haystack',
