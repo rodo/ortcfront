@@ -169,6 +169,8 @@ class EventView(DetailView):
                                   event=event,
                                   comment=form.cleaned_data['comment'],
                                   status=form.cleaned_data['status'])
+            event.status = form.cleaned_data['status']
+            event.save()
 
         return HttpResponseRedirect(reverse('event_view', args=[pk]))
 
