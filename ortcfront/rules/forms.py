@@ -47,7 +47,6 @@ def validate_regex(value):
         raise ValidationError('%s is an invalid regex' % value)
 
 
-
 class DomainNewForm(forms.ModelForm):
     """Use to create a new domain
     """
@@ -98,6 +97,18 @@ class RuleNewForm(forms.ModelForm):
                                             validate_regex,
                                             exclude_regex],
                                 widget=TextInput())
+
+    def clean(self):
+        # example custom validation across forms in the formset
+        act = self.cleaned_data['create_applied'] or self.cleaned_data['delete_applied'] or self.cleaned_data['modify_applied']
+        obo = self.cleaned_data['node_applied'] or self.cleaned_data['way_applied'] or self.cleaned_data['relation_applied']
+        if not act:
+            raise ValidationError('One action (create, modify or delete) is required')
+        if not obo:
+            raise ValidationError('One object type (node, way or relation) is required')
+        return super(RuleNewForm, self).clean()
+
+
 
     helper = FormHelper()
     helper.form_class = 'form-horizontal'

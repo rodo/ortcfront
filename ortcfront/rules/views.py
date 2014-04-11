@@ -20,6 +20,7 @@
 """
 import logging
 import json
+from django.conf import settings
 from django.core.cache import cache
 from django.core.exceptions import ObjectDoesNotExist
 from django.views.decorators.cache import cache_page
@@ -75,7 +76,7 @@ class RuleListView(ListView):
     model = Rule
 
     def get_queryset(self):
-        query = Rule.objects.filter(active=True)
+        query = Rule.objects.filter(active=True).order_by('-create_on')
         if 'element' in self.kwargs.keys():
             if self.kwargs['element'] == u'node':
                 query = query.filter(node_applied=True)
@@ -169,6 +170,9 @@ class RuleNewView(CreateView):
     success_url = reverse_lazy('profile')
 
     def form_valid(self, form):
+        logger = logging.getLogger(settings.SYSLOG_NAME)
+        logger.info('{} create a new rule {}'.format(self.request.user.username,
+                                                     form.cleaned_data['name']))
         form.instance.create_by = self.request.user
         return super(RuleNewView, self).form_valid(form)
 

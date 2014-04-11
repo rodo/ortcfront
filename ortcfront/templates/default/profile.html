@@ -33,13 +33,46 @@
 	  {% for domain in my_domains %}
 	  <tr>
 	    <td><a href="{{domain.get_absolute_url}}">{{domain.name}}</a></td>
+	    <td>
+	      <a class="btn btn-primary btn-xs" href="{% url 'domain_edit' domain.id %}">
+		<span class="glyphicon glyphicon-edit" /> {% trans "Edit" %}
+	      </a>
+	    </td>
 	  </tr>
 	  {% endfor %}
 	</tbody>
       </table>
+      <table class="table table-striped">
+	<thead>
+	  <tr>
+	    <th>{% trans "My rules" %}</th>
+	  </tr>
+	</thead>
+	<tbody>
+	  {% for rule in my_rules %}
+	  <tr>
+	    <td><a href="{{rule.get_absolute_url}}">{{rule.name}}</a></td>
+	    <td>
+	      {% if rule.node_applied %}<img src="{{STATIC_URL}}img/20px-Osm_element_node.svg.png" />{% endif %}
+	      {% if rule.way_applied %}<img src="{{STATIC_URL}}img/20px-Osm_element_way.svg.png" />{% endif %}
+	      {% if rule.relation_applied %}<img src="{{STATIC_URL}}img/20px-Osm_element_relation.svg.png" />{% endif %}
+	    </td>
+	    <td>{% if rule.create_applied %}<span class="glyphicon glyphicon-ok"></span>{% endif %}</td>
+	    <td>{% if rule.delete_applied %}<span class="glyphicon glyphicon-ok"></span>{% endif %}</td>
+	    <td>{% if rule.modify_applied %}<span class="glyphicon glyphicon-ok"></span>{% endif %}</td>
+	    	    
+	    <td>
+	      <a class="btn btn-primary btn-xs" href="{% url 'rule_edit' rule.id %}">
+		<span class="glyphicon glyphicon-edit" /> {% trans "Edit" %}
+	      </a>
+	    </td>
+	  </tr>
+	  {% endfor %}
+	</tbody>
+      </table>
+
     </div>
   </div>
-
 
   <div class="col-md-2">
     {% include "buttons.html" %}

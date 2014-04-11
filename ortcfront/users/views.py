@@ -41,10 +41,12 @@ def home(request):
 def profile(request):
     """The home page
     """
+    rules = Rule.objects.filter(create_by=request.user).order_by('-create_on')[:10]
     domains = Domain.objects.filter(enable=True).order_by('-create_on')
     notification = Notification.objects.filter(user=request.user).order_by('-create_on')
     my_subscriptions = Subscription.objects.filter(user=request.user)
     return render(request,
                   'profile.html',
                   {'my_domains': domains,
+                   'my_rules': rules,
                    'my_subscriptions': my_subscriptions})

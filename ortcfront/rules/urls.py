@@ -27,9 +27,9 @@ urlpatterns = patterns('',
                        url(r'^s/$', RuleListView.as_view()),
 
                        url(r'^s/domain/new/$', login_required(DomainNewView.as_view()), name='domain_new'),
-                       url(r'^s/domain/(?P<pk>\d+)/edit/$', login_required(DomainEditView.as_view())),
+                       url(r'^s/domain/(?P<pk>\d+)/edit/$', login_required(DomainEditView.as_view()), name='domain_edit'),
                        url(r'^s/domain/(?P<pk>\d+)/$', DomainView.as_view()),
                        url(r'^/new/$', login_required(RuleNewView.as_view()), name='rule_new'),
-                       url(r'^/(?P<pk>\d+)/edit/$', login_required(RuleEditView.as_view())),
+                       url(r'^/(?P<pk>\d+)/edit/$', login_required(RuleEditView.as_view()), name='rule_edit'),
                        url(r'^/(?P<pk>\d+)/$', RuleView.as_view()),
                        )

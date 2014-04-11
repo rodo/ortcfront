@@ -184,6 +184,11 @@ OSM_ITEMS = {'1': 'node',
              '2': 'way',
              '3': 'relation'}
 
+#
+# Syslog name
+#
+SYSLOG_NAME = 'ortcfront'
+
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
 # the site admins on every HTTP 500 error when DEBUG=False.
