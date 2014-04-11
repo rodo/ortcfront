@@ -31,4 +31,5 @@ class AlertSerializer(serializers.ModelSerializer):
 class EventSerializer(serializers.ModelSerializer):
     class Meta:
         model = Event
-        fields = ('id', 'alert', 'item', 'osmid', 'changeset', 'action', 'rule', 'geom')
+        fields = ('id', 'alert', 'item', 'osmid', 'changeset', 
+                  'action', 'rule', 'change', 'geom')

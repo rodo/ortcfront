@@ -1,5 +1,6 @@
 {% extends "base.html" %}{% load leaflet_tags %}{% load geojson_tags %}
 {% load i18n %}{% load compress %}{% load crispy_forms_tags %}
+{% load json_tags %}
 {% block title %} : {{object.name}}{% endblock %}
 {% block pagetitle %}{% trans "Alert" %} : {{object.name}}{% endblock %}
 {% block content %}
@@ -42,6 +43,47 @@
 	  </tr>
 	</tbody>
       </table>
+
+      <table class="table table-bordered">
+	<thead>
+	  <tr>
+	    <th></th>
+	    <th>{% trans "Key" %}</th>
+	    <th>{% trans "Value" %}</th>
+
+	  </tr>
+	</thead>
+	<tbody>
+	  {% for tag in change.tag_added %}
+	  <tr class="info">
+	    <td>added</td>
+	    <td><a target="_blank" href="http://wiki.openstreetmap.org/wiki/Key:{{tag|get_key}}">{{tag|get_key}}</a></td>
+	    <td>{{tag|get_value}}</td>
+	  </tr>
+	  {% endfor %}
+	  {% for tag in change.tag_changed %}
+	  <tr class="warning">
+	    <td>now</td>
+	    <td><a target="_blank" href="http://wiki.openstreetmap.org/wiki/Key:{{tag.key}}">{{tag.key}}</a></td>
+	    <td>{{tag.new}}</td>
+	  </tr>
+	  <tr class="warning">
+	    <td>before</td>
+	    <td><a target="_blank" href="http://wiki.openstreetmap.org/wiki/Key:{{tag.key}}">{{tag.key}}</a></td>
+	    <td>{{tag.old}}</td>
+	  </tr>
+	  {% endfor %}
+	  {% for tag in change.tag_removed %}
+	  <tr class="danger">
+	    <td>removed</td>
+	    <td><a target="_blank" href="http://wiki.openstreetmap.org/wiki/Key:{{tag|get_key}}">{{tag|get_key}}</a></td>
+	    <td>{{tag|get_value}}</td>
+	  </tr>
+	  {% endfor %}
+	</tbody>
+      </table>
+
+
     </div>
     <div>
       <table class="table table-condensed">
@@ -94,7 +136,6 @@
 	<a href="{% url 'alert_subscribe' object.id %}" class="btn btn-primary btn-block">{% trans "Subscribe" %}</a>
       </p>
     </div>
-
 
   </div>
 </div>

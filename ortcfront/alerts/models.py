@@ -139,6 +139,8 @@ class Event(models.Model):
     osmid = models.BigIntegerField()
     changeset = models.BigIntegerField()
     #
+    change = models.TextField(blank=True, null=True)
+    #
     geom = gismodels.GeometryField()
     # non mandatory fields
     date_event = models.DateTimeField(auto_now_add=True)

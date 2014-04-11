@@ -19,6 +19,7 @@
 
 """
 import logging
+import json
 from django.conf import settings
 from django.views.generic import DetailView, ListView, CreateView, UpdateView
 from django.core.urlresolvers import reverse, reverse_lazy
@@ -188,6 +189,7 @@ class EventView(DetailView):
         context = super(EventView, self).get_context_data(**kwargs)
         context['form'] = ReportNewForm()
         context['reports'] = Report.objects.filter(event=self.object).order_by('-create_on')
+        context['change'] = json.loads(self.object.change)
         return context
 
     def post(self, request, pk):
