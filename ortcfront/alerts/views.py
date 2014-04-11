@@ -189,7 +189,10 @@ class EventView(DetailView):
         context = super(EventView, self).get_context_data(**kwargs)
         context['form'] = ReportNewForm()
         context['reports'] = Report.objects.filter(event=self.object).order_by('-create_on')
-        context['change'] = json.loads(self.object.change)
+        try:
+            context['change'] = json.loads(self.object.change)
+        except:
+            context['change'] = []
         return context
 
     def post(self, request, pk):
