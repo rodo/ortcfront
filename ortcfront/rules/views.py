@@ -172,8 +172,7 @@ class RuleNewView(CreateView):
 
     def form_valid(self, form):
         logger = logging.getLogger(settings.SYSLOG_NAME)
-        logger.info('{} create a new rule {}'.format(self.request.user.username,
-                                                     form.cleaned_data['name']))
+        logger.info(u'{} create a new rule {}'.format(self.request.user.username, form.cleaned_data['name']))
         form.instance.create_by = self.request.user
         return super(RuleNewView, self).form_valid(form)
 
