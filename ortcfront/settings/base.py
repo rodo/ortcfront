@@ -160,9 +160,13 @@ HAYSTACK_CONNECTIONS = {
         'PATH': os.path.join(os.path.dirname(__file__), 'whoosh_index'),
     },
 }
-
-
-
+#
+# Registration
+#
+ACCOUNT_ACTIVATION_DAYS = 7
+#
+#
+#
 LEAFLET_CONFIG = {
     'DEFAULT_CENTER': (50.0, 5.0),
     'DEFAULT_ZOOM': 2,
