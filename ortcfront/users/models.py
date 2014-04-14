@@ -22,7 +22,8 @@ from django.core.mail import mail_admins
 
 def inform_admins(sender, instance, created, **kwargs):
     if created:
-        mail_admins("New user on osmrtcheck", "new user : {}".format(instance.username))
-
+        mail_admins("New user on osmrtcheck",
+                    "new user : {}\nemail: {}".format(instance.username,
+                                                      instance.email))
 
 post_save.connect(inform_admins, sender=User)
