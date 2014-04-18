@@ -1,0 +1,118 @@
+#
+# Sample local_settings.py
+#
+#
+###########################################################################################
+#
+# Mandatory options
+#
+###########################################################################################
+#
+# We strongly encourage you tu use the postgis engine in production 
+# 'django.contrib.gis.db.backends.postgis' 
+# but you can use an other geo sgbd like spatialite if you prefer
+# 
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.contrib.gis.db.backends.postgis', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+        'NAME': '',                      # Or path to database file if using sqlite3.
+        'USER': '',                      # Not used with sqlite3.
+        'PASSWORD': '',                  # Not used with sqlite3.
+        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
+        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
+    }
+}
+#
+# Configure your email here
+#
+#ADMINS = (
+#    ('Your Name', 'email@fqdn'),
+#)
+
+DEFAULT_FROM_EMAIL = 'no-reply-default@example.com'
+SERVER_EMAIL = 'no-reply-server@example.com'
+
+# Make this unique, and don't share it with anybody.
+# CHANGE IT 
+# CHANGE IT 
+# CHANGE IT 
+# CHANGE IT 
+# CHANGE IT 
+# CHANGE IT 
+# Did we said IT enough ? CHANGE IT !
+
+SECRET_KEY = '5q*3amzelkjmp;7cy437t(lw+@898-m#aead;-jsyVi=do$dr6t*q^'
+
+
+# Haystack configuration
+# by default we use Whoosh, if you want to do the same you need to install it
+# the whoosh package is not in requirements
+#
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
+        'PATH': os.path.join(os.path.dirname(__file__), 'whoosh_index'),
+    },
+}
+# Hosts/domain names that are valid for this site; required if DEBUG is False
+# See https://docs.djangoproject.com/en/1.4/ref/settings/#allowed-hosts
+ALLOWED_HOSTS = []
+#
+###########################################################################################
+#
+# End of mandatory
+#
+###########################################################################################
+# Default number off element in pagination
+#
+ORCT_PAGINATE_DEFAULT=20
+#
+# I love to log but it's not mandatory do as you like
+#
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'filters': {
+        'require_debug_false': {
+            '()': 'django.utils.log.RequireDebugFalse'
+        }
+    },
+
+    'formatters': {
+        'verbose': {
+            'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
+            },
+        'simple': {
+            'format': '%(levelname)s %(message)s'
+            },
+        },
+
+    'handlers': {
+        'mail_admins': {
+            'level': 'ERROR',
+            'filters': ['require_debug_false'],
+            'class': 'django.utils.log.AdminEmailHandler'
+        },
+        'syslog':{
+            'level':'DEBUG',
+            'class':'logging.handlers.SysLogHandler',
+            'formatter': 'verbose',
+            },
+
+    },
+
+    'loggers': {
+        'django.request': {
+            'handlers': ['mail_admins'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+
+        'ortcfront': {
+            'handlers':['syslog'],
+            'propagate': True,
+            'level':'DEBUG',
+            },
+
+    }
+}

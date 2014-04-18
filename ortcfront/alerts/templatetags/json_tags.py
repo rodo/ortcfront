@@ -10,3 +10,8 @@ def get_key(dictionnary):
 @register.filter
 def get_value(dictionnary):
     return dictionnary.values()[0]
+
+@register.filter
+def get_geom(dictionnary):
+    print dictionnary
+    return "k"

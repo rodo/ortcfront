@@ -100,7 +100,7 @@ class EventsList(ListView):
             qry = Event.objects.filter(status=status)
         except:
             pass
-        return qry
+        return qry.order_by('-date_event')
 
                 
 class EventsAPIList(APIView):
@@ -189,6 +189,7 @@ class EventView(DetailView):
         context = super(EventView, self).get_context_data(**kwargs)
         context['form'] = ReportNewForm()
         context['reports'] = Report.objects.filter(event=self.object).order_by('-create_on')
+        context['other_events'] = Event.objects.filter(osmid=self.object.osmid).order_by('-date_event')
         try:
             context['change'] = json.loads(self.object.change)
         except:

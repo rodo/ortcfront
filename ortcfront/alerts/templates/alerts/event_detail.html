@@ -1,6 +1,6 @@
 {% extends "base.html" %}{% load leaflet_tags %}{% load geojson_tags %}
 {% load i18n %}{% load compress %}{% load crispy_forms_tags %}
-{% load json_tags %}
+{% load json_tags %}{% load geom_tags %}
 {% block title %} : {{object.name}}{% endblock %}
 {% block pagetitle %}{% trans "Alert" %} : {{object.name}}{% endblock %}
 {% block content %}
@@ -47,7 +47,7 @@
       <table class="table table-bordered">
 	<thead>
 	  <tr>
-	    <th></th>
+	    <th>{% trans "Action" %}</th>
 	    <th>{% trans "Key" %}</th>
 	    <th>{% trans "Value" %}</th>
 
@@ -80,9 +80,36 @@
 	    <td>{{tag|get_value}}</td>
 	  </tr>
 	  {% endfor %}
+	  {% for tag in change.tag_unchanged %}
+	  <tr class="success">
+	    <td></td>
+	    <td><a target="_blank" href="http://wiki.openstreetmap.org/wiki/Key:{{tag|get_key}}">{{tag|get_key}}</a></td>
+	    <td>{{tag|get_value}}</td>
+	  </tr>
+	  {% endfor %}
 	</tbody>
       </table>
 
+      {% if change.geom_change|length %}
+      <table class="table table-bordered">
+	<thead>
+	  <tr>
+	    <th>{% trans "Action" %}</th>
+	    <th>{% trans "Actual" %}</th>
+	    <th>{% trans "Previous" %}</th>
+	  </tr>
+	</thead>
+	<tbody>
+	  {% for geom in change.geom_change %}
+	  <tr class="danger">
+	    <td>{{geom.action}}</td>
+	    <td><a href="#" onclick="map_move({{ geom.new|coord_from_wkt }});">{{geom.new}}</a></td>
+	    <td><a href="#" onclick="map_move({{ geom.previous|coord_from_wkt }});">{{geom.previous}}</a></td>
+	  </tr>
+	  {% endfor %}
+	</tbody>
+      </table>
+      {% endif %}
 
     </div>
     <div>
@@ -136,6 +163,24 @@
 	<a href="{% url 'alert_subscribe' object.id %}" class="btn btn-primary btn-block">{% trans "Subscribe" %}</a>
       </p>
     </div>
+    <div>
+      <table class="table table-condensed">
+	<thead>
+	  <tr>
+	    <th>{% trans "Other events" %}</th>
+	  </tr>
+	</thead>
+	<tbody>
+	  {% for oevent in other_events %}
+	  <tr>
+	    <td>{{oevent.date_event|date:"d M"}}</td>
+	    <td><a href="{% url 'event_view' oevent.id %}">{{oevent.action_str}}</td>
+	  </tr>
+	  {% endfor %}
+	</tbody>
+      </table>
+</div>
+
 
   </div>
 </div>

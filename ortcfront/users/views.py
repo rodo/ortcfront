@@ -21,6 +21,7 @@ import logging
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from ortcfront.rules.models import Domain, Rule
+from django.contrib.auth.models import User
 from ortcfront.alerts.models import Alert, Notification, Subscription, Event
 
 logger = logging.getLogger(__name__)
@@ -29,6 +30,7 @@ logger = logging.getLogger(__name__)
 def home(request):
     """The home page
     """
+    users = User.objects.all()
     events = Event.objects.all().order_by('-date_event')[:10]
     alerts = Alert.objects.filter(enable=True).order_by('-create_on')
     return render(request,

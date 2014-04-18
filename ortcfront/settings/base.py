@@ -153,7 +153,9 @@ INSTALLED_APPS = (
     'ortcfront.rules',
     'ortcfront.alerts'
 )
-
+#
+#
+#
 HAYSTACK_CONNECTIONS = {
     'default': {
         'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',

@@ -9,17 +9,20 @@
     <table class="table table-striped">
       <thead>
 	<tr><th></th>
+	  <th>{% trans "Date" %}</th>
 	  <th>{% trans "Alert" %}</th>
 	  <th>{% trans "Action" %}</th>
 	  <th>{% trans "Object" %}</th>
 	  <th>{% trans "OSMID" %}</th>
 	  <th>{% trans "Changeset" %}</th>
+	  <th>{% trans "Status" %}</th>
 	</tr>
       </thead>
       <tbody>
 	{% for event in object_list %}
 	<tr>
 	  <td><a class="btn btn-default btn-xs" href="{{event.get_absolute_url}}"><span class="glyphicon glyphicon-eye-open"></span></a></td>
+	  <td>{{event.date_event}}</td>
 	  <td><a href="{{event.alert.get_absolute_url}}">{{event.alert.name}}</a></td>
 	  <td>{{event.action_str}}</td>
 	  <td><img src="{{STATIC_URL}}img/{{event.get_osmid_img}}" /></td>
