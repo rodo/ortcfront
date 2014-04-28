@@ -39,7 +39,7 @@
   </div>
 
   <div class="col-md-5">
-    {% trans "Last Events" %}
+    {% trans "Last 20 events" %}
     <table class="table table-condensed">
       <thead>
 	<tr>
@@ -48,7 +48,7 @@
 	</tr>
       </thead>
       <tbody>
-	{% for event in object.get_events %}
+	{% for event in object.last_events %}
 	<tr>
 	  <td><a class="btn btn-default" href="{{event.get_absolute_url}}"><span class="glyphicon glyphicon-eye-open"></span></a></td>
 	  <td> {{event.action_str}}</td>

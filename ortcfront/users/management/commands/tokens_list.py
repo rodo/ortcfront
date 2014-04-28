@@ -19,7 +19,9 @@
 """
 User management
 """
+import logging
 from django.core.management.base import BaseCommand
+from django.conf import settings
 from rest_framework.authtoken.models import Token
 
 
@@ -29,6 +31,9 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         """List tokens
         """
+        logger = logging.getLogger(settings.SYSLOG_NAME)
+        logger.info('list tokens')
+
         for token in Token.objects.all():
             self.stdout.write('{} {} \n'.format(token.user.username,
                                                 token.key

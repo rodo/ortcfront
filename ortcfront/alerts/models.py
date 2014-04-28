@@ -83,6 +83,9 @@ class Alert(models.Model):
     def get_events(self):
         return Event.objects.filter(alert=self).order_by('-date_event')
 
+    def last_events(self):
+        return Event.objects.filter(alert=self).order_by('-date_event')[:20]
+
     def get_absolute_url(self):
         return "/alert/{}/".format(self.id)
 

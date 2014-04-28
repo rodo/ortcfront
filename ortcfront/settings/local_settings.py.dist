@@ -1,6 +1,7 @@
 #
 # Sample local_settings.py
 #
+import os.path
 #
 ###########################################################################################
 #
@@ -63,11 +64,16 @@ ALLOWED_HOSTS = []
 # End of mandatory
 #
 ###########################################################################################
-# Default number off element in pagination
+# Default number of element in pagination
 #
 ORCT_PAGINATE_DEFAULT=20
 #
 # I love to log but it's not mandatory do as you like
+#
+# Syslog name
+#
+SYSLOG_NAME = 'ortcfront'
+#
 #
 LOGGING = {
     'version': 1,
@@ -94,9 +100,11 @@ LOGGING = {
             'class': 'django.utils.log.AdminEmailHandler'
         },
         'syslog':{
+            'address': '/dev/log',
             'level':'DEBUG',
             'class':'logging.handlers.SysLogHandler',
-            'formatter': 'verbose',
+            'formatter': 'simple',
+            'facility': 'local5'
             },
 
     },

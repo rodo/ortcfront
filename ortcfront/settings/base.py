@@ -9,17 +9,19 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
-# DATABASES are defined in local_settings
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': '/tmp/foo',                      # Or path to database file if using sqlite3.
-        'USER': '',                      # Not used with sqlite3.
-        'PASSWORD': '',                  # Not used with sqlite3.
-        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
+        'ENGINE': 'django.contrib.gis.db.backends.postgis', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+        'NAME': 'ortcfront',
+        'USER': 'rodo',
+        'PASSWORD': 'rodo',
+        'HOST': 'localhost',                      # Set to empty string for localhost. Not used with sqlite3.
+        'PORT': '5433',                      # Set to empty string for default. Not used with sqlite3.
     }
 }
+#
+# Configure your email here
+
 
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
@@ -192,10 +194,6 @@ OSM_ITEMS = {'1': 'node',
              '3': 'relation'}
 
 #
-# Syslog name
-#
-SYSLOG_NAME = 'ortcfront'
-#
 # Default pagination
 #
 ORCT_PAGINATE_DEFAULT=20
@@ -213,13 +211,24 @@ LOGGING = {
             '()': 'django.utils.log.RequireDebugFalse'
         }
     },
+
+    'formatters': {
+        'verbose': {
+            'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
+            },
+        'simple': {
+            'format': '%(levelname)s %(message)s'
+            },
+        },
+
     'handlers': {
         'mail_admins': {
             'level': 'ERROR',
             'filters': ['require_debug_false'],
             'class': 'django.utils.log.AdminEmailHandler'
-        }
+        },
     },
+
     'loggers': {
         'django.request': {
             'handlers': ['mail_admins'],
