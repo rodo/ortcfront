@@ -1,0 +1,12 @@
+#
+# Packages for running tests
+#
+nosexcover
+django-nose
+pep8
+flake8
+#
+#  If you use jenkins you can add
+#
+django-jenkins
+gcovr
