@@ -1,3 +1,5 @@
+[![Requirements Status](https://requires.io/github/rodo/ortcfront/requirements.svg?branch=master)](https://requires.io/github/rodo/ortcfront/requirements/?branch=master)
+
 OpenStreetMap Realtime Check Web Frontend
 =========================================
 
