@@ -6,7 +6,7 @@ Replace this with more appropriate tests for your application.
 """
 
 from django.test import TestCase
-from ortcfront
+from ortcfront.alerts.models import Geozone
 
 class SimpleTest(TestCase):
     def test_basic_addition(self):

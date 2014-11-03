@@ -60,7 +60,6 @@ class Geozone(models.Model):
         return self.name
 
 
-
 class Alert(models.Model):
     """
     """
@@ -71,6 +70,9 @@ class Alert(models.Model):
 
     # is the alert enable or not
     enable = models.BooleanField(default=True)
+
+    # do stats are compute on this alert
+    stat = models.BooleanField(default=False)
 
     #
     create_by = models.ForeignKey(User)
@@ -157,7 +159,7 @@ class Event(models.Model):
 
     def get_absolute_url(self):
         return "/event/{}/".format(self.id)
-    
+
     def status_icon(self):
         statuses = {'3': 'ok',
                     '2': 'info',
@@ -167,7 +169,7 @@ class Event(models.Model):
 
     def status_str(self):
         statuses = {'1': 'new',
-                    '2': 'need info',                    
+                    '2': 'need info',
                     '3': 'validate',
                     '4': 'error'}
         return statuses[str(self.status)]
@@ -180,9 +182,12 @@ class Event(models.Model):
                    '5': 'tagcreate',
                    '6': 'topochange'}
         return actions[str(self.action)]
-        
+
     def get_osmid_img(self):
-        return "20px-Osm_element_{}.svg.png".format(settings.OSM_ITEMS[str(self.item)])
+        """Build a string represents osm img
+        """
+        setting = settings.OSM_ITEMS[str(self.item)]
+        return "20px-Osm_element_{}.svg.png".format(setting)
 
     def get_osmid_url(self):
         return "{}/{}/{}".format(settings.OSM_WWW,
@@ -211,11 +216,10 @@ class Report(models.Model):
 
     def status_str(self):
         statuses = {'1': 'new',
-                    '2': 'need info',                    
+                    '2': 'need info',
                     '3': 'validate',
                     '4': 'error'}
         return statuses[str(self.status)]
-
 
 
 class Subscription(models.Model):
@@ -246,6 +250,7 @@ def analyze_event(sender, instance, created, **kwargs):
             for sub in Subscription.objects.filter(alert=alert):
                 Notification.objects.create(user=sub.user,
                                             alert=alert)
+
 
 def auto_subscribe_alert(sender, instance, created, **kwargs):
     if created:

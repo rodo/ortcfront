@@ -63,7 +63,7 @@ class AlertNewForm(forms.ModelForm):
     """
     class Meta:
         model = Alert
-        fields = ['name', 'description', 'domain', 'geozone']
+        fields = ['name', 'description', 'domain', 'geozone', 'stat']
 
     name = forms.CharField(max_length=50,
                            required=True,
@@ -74,6 +74,8 @@ class AlertNewForm(forms.ModelForm):
                                   required=False,
                                   widget=Textarea())
 
+    stat = forms.BooleanField(label="Compute stats")
+
     helper = FormHelper()
     helper.form_class = 'form-horizontal'
     helper.label_class = 'col-lg-2'
@@ -83,6 +85,7 @@ class AlertNewForm(forms.ModelForm):
         layout.Field('description'),
         layout.Field('domain'),
         layout.Field('geozone'),
+        layout.Field('stat'),
         FormActions(
             layout.Submit('save_changes', 'Save', css_class="btn-primary"),
             layout.Submit('cancel', 'Cancel', css_class="btn-danger"),
