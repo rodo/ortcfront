@@ -5,7 +5,7 @@ import io.gatling.core.Predef._
 import io.gatling.http.Predef._
 import io.gatling.jdbc.Predef._
 
-class HomepageSimulation extends Simulation {
+class AlertsSimulation extends Simulation {
 
 	val httpProtocol = http
 		.baseURL("http://osmrtcheck.quiedeville.org")
@@ -23,13 +23,25 @@ class HomepageSimulation extends Simulation {
 
     val uri5 = """http://osmrtcheck.quiedeville.org"""
 
-    val scn = scenario("HomepageSimulation")
+    val scn = scenario("AlertsSimulation")
         .exec(http("request_1")
 		  .get(uri5 + """/""")
 		  .resources(http("request_2")
 			         .get(uri5 + """/favicon.ico""")
 			         .headers(headers_2)
 			         .check(status.is(404))))        
+        .pause(4)
+        .exec(http("request_6")
+		.get(uri5 + """/alert/zone/2/data.geojson""")
+		.headers(headers_6))
+		.pause(2)
+		.exec(http("request_10")
+			.get(uri5 + """/alerts/"""))
+		.pause(1)
+		.exec(http("request_11")
+			.get(uri5 + """/rules/""")
+			.resources(http("request_12")
+			.get(uri5 + """/static/fonts/glyphicons-halflings-regular.woff""")))
 
 	setUp(scn.inject(atOnceUsers(1))).protocols(httpProtocol)
 }
