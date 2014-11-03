@@ -5,7 +5,7 @@ import io.gatling.core.Predef._
 import io.gatling.http.Predef._
 import io.gatling.jdbc.Predef._
 
-class RecordedSimulation extends Simulation {
+class HomepageSimulation extends Simulation {
 
 	val httpProtocol = http
 		.baseURL("http://osmrtcheck.quiedeville.org")
@@ -23,7 +23,7 @@ class RecordedSimulation extends Simulation {
 
     val uri5 = """http://osmrtcheck.quiedeville.org"""
 
-	val scn = scenario("RecordedSimulation")
+	val scn = scenario("HomepageSimulation")
 		.exec(http("request_0")
 			.get("http://" + uri5 + """/"""))
 		.pause(13)
