@@ -1,11 +1,11 @@
-package frt.al
+package frt.evt
 
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
 import io.gatling.jdbc.Predef._
 
-object Alerts {
+object Events {
 
-  val list = http("""/alerts/""").get("""/alerts/""")
+  val list = http("""/events/""").get("""/events/""")
              
 }
