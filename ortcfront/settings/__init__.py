@@ -15,7 +15,18 @@ from devel_settings import *
 """
 # We try to load custom settings here
 from base import *
+
 try:
     from local_settings import *
+except:
+    pass
+
+try:
+    from test_settings import *
+except:
+    pass
+
+try:
+    INSTALLED_APPS += ADD_APPS
 except:
     pass

@@ -20,7 +20,7 @@ from django.contrib.auth.decorators import login_required
 from django.conf.urls import patterns, include, url
 from django.shortcuts import redirect
 from django.views.generic.base import RedirectView
-from .views import AlertNewView, AlertEditView, AlertView, AlertListView
+from .views import AlertNewView, AlertEditView, AlertView, AlertListView, AlertStatView
 from .views import GeozoneNewView, GeozoneEditView, GeozoneView, GeozoneGeoJSONView
 from .views import ListAlerts, LatestAlertsFeed
 from views import EventsFeed
@@ -33,6 +33,7 @@ urlpatterns = patterns('',
                        url(r'^/(?P<alert_id>\d+)/events/feed/$', EventsFeed()),
                        url(r'^/(?P<pk>\d+)/edit/$', login_required(AlertEditView.as_view())),
                        url(r'^/(?P<pk>\d+)/subscribe/$', 'ortcfront.alerts.views.subscribe', name='alert_subscribe'),
+                       url(r'^/(?P<pk>\d+)/stats/$', AlertStatView.as_view(), name='alert_stats'),
                        url(r'^/(?P<pk>\d+)/$', AlertView.as_view()),
                        url(r'^/zone/new/$', login_required(GeozoneNewView.as_view()), name='geozone_new'),
                        url(r'^/zone/(?P<pk>\d+)/edit/$', login_required(GeozoneEditView.as_view()), name='geozone_edit'),

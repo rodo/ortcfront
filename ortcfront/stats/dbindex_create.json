@@ -1,0 +1,13 @@
+[{"name": "stats_alertstats__idx1",
+  "table": "stats_alertstats",
+  "columns": ["alert_id","item","date_stat"]},
+ {"name": "stats_alertstats__idx2",
+  "table": "stats_alertstats",
+  "columns": ["alert_id","year"]},
+ {"name": "stats_alertstats__idx3",
+  "table": "stats_alertstats",
+  "columns": ["alert_id","year","month"]},
+ {"name": "stats_alertuserstats__idx1",
+  "table": "stats_alertuserstats",
+  "columns": ["alert_id","item","userid","date_stat"]}
+]

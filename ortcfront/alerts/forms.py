@@ -74,7 +74,8 @@ class AlertNewForm(forms.ModelForm):
                                   required=False,
                                   widget=Textarea())
 
-    stat = forms.BooleanField(label="Compute stats")
+    stat = forms.BooleanField(label="Compute stats",
+                              required=False)
 
     helper = FormHelper()
     helper.form_class = 'form-horizontal'

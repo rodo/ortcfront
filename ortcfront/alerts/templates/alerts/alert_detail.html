@@ -9,20 +9,27 @@
     <h3>{{object.name}}</h3>
     <div class="well">
       <ul>
-	<li>
-	  {% trans "Domain" %} : <a href="{{object.domain.get_absolute_url}}">{{object.domain}}</a>
-	</li>
-	<li>
-	  {% trans "Geozone" %} : <a href="{{object.geozone.get_absolute_url}}">{{object.geozone}}</a>
-	</li>
-	<li>
-	  {% trans "Created by" %} {{object.create_by.username}}
-	</li>
-	<li>
-	  {% trans "Created on" %} {{object.create_on}}
-	</li>
-	<li>Subscribers : <span class="badge">{{object.nb_subscribers}}</span></li>
-	<li>Notifications : {{object.nb_notifications}}</li>
+	    <li>
+	      {% trans "Domain" %} : <a href="{{object.domain.get_absolute_url}}">{{object.domain}}</a>
+	    </li>
+	    <li>
+	      {% trans "Geozone" %} : <a href="{{object.geozone.get_absolute_url}}">{{object.geozone}}</a>
+	    </li>
+	    <li>
+	      {% trans "Created by" %} {{object.create_by.username}}
+	    </li>
+	    <li>
+	      {% trans "Created on" %} {{object.create_on}}
+	    </li>
+	    <li>Subscribers : <span class="badge">{{object.nb_subscribers}}</span></li>
+	    <li>Notifications : {{object.nb_notifications}}</li>
+	    <li>{% trans "Statistics" %} : 
+          {% if object.stat %}
+        <a href="{% url 'alert_stats' object.id %}">{% trans "view" %}</a>
+        {% else %}
+          {% trans "no" %}
+          {% endif %}
+        </li>
       </ul>
     </div>
 

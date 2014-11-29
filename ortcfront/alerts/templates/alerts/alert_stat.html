@@ -1,0 +1,71 @@
+{% extends "base.html" %}{% load leaflet_tags %}{% load geojson_tags %}
+{% load i18n %}{% load compress %}{% load crispy_forms_tags %}
+{% block title %} : {{object.name}}{% endblock %}
+{% block pagetitle %}{% trans "Alert" %} : {{object.name}}{% endblock %}
+{% block rssnavbar %}<a href="events/feed/"><img id="rssicon" src="{{STATIC_URL}}img/rss_blue-32.png" /></a>{% endblock %}
+{% block content %}
+<div class="row">
+  <div class="col-md-5">
+    <h3>{{object.name}}</h3>
+    <div class="well">
+      <ul>
+	    <li>
+	      {% trans "Domain" %} : <a href="{{object.domain.get_absolute_url}}">{{object.domain}}</a>
+	    </li>
+	    <li>
+	      {% trans "Geozone" %} : <a href="{{object.geozone.get_absolute_url}}">{{object.geozone}}</a>
+	    </li>
+	    <li>
+	      {% trans "Created by" %} {{object.create_by.username}}
+	    </li>
+	    <li>
+	      {% trans "Created on" %} {{object.create_on}}
+	    </li>
+	    <li>Subscribers : <span class="badge">{{object.nb_subscribers}}</span></li>
+	    <li>Notifications : {{object.nb_notifications}}</li>
+      </ul>
+    </div>
+
+    {% leaflet_map "alert_detail" callback="main_map_init" %}
+  </div>
+
+  <div class="col-md-7">
+    {% trans "Statistics" %}
+    <table class="table table-condensed">
+      <thead>
+	<tr>
+	  <th>{% trans "Year" %}</th>
+      <th>{% trans "Created" %}</th>
+      <th>{% trans "Modified" %}</th>
+      <th>{% trans "Deleted" %}</th>
+	</tr>
+      </thead>
+      <tbody>
+	{% for stat in stats %}
+	<tr>
+	  <td>{{ stat.year }}</td>
+	  <td>{{ stat.created }}</td>
+	  <td>{{ stat.modified }}</td>
+	  <td>{{ stat.deleted }}</td>
+	</tr>
+	{% endfor %}
+      </tbody>
+    </table>
+
+
+  
+    
+  </div>
+</div>
+<script type="text/javascript">
+  function main_map_init (map, options) {
+
+  var layer = L.geoJson();
+  map.addLayer(layer);
+  $.getJSON("{% url 'geozone_geojson' object.geozone.id %}", function (data) {
+    layer.addData(data);
+    map.fitBounds(layer.getBounds());
+  });
+  }
+</script>
+{% endblock %}

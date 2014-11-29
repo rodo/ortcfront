@@ -13,10 +13,10 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.contrib.gis.db.backends.postgis', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
         'NAME': 'ortcfront',
-        'USER': 'rodo',
-        'PASSWORD': 'rodo',
-        'HOST': 'localhost',                      # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': '5433',                      # Set to empty string for default. Not used with sqlite3.
+        'USER': '',
+        'PASSWORD': '',
+        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
+        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
     }
 }
 #
@@ -146,14 +146,18 @@ INSTALLED_APPS = (
     'compressor',
     'haystack',
     'leaflet',
+    'django_extensions',
     'django_gravatar',
     'djgeojson',
+    'json_dbindex',
     'rest_framework',
     'rest_framework.authtoken',
     'crispy_forms',
+    #
     'ortcfront.users',
     'ortcfront.rules',
-    'ortcfront.alerts'
+    'ortcfront.alerts',
+    'ortcfront.stats'
 )
 #
 #

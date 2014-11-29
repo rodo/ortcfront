@@ -36,6 +36,8 @@ from djgeojson.views import GeoJSONLayerView
 from .models import Alert, Subscription, Geozone, Event, Report
 from .serializers import AlertSerializer, EventSerializer
 from .forms import AlertNewForm, GeozoneNewForm, ReportNewForm
+from ortcfront.stats.models import ViewAlertYear
+
 
 logger = logging.getLogger(__name__)
 
@@ -177,6 +179,18 @@ class AlertView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(AlertView, self).get_context_data(**kwargs)
+        return context
+
+
+class AlertStatView(DetailView):
+    """The statiistics view
+    """
+    model = Alert
+    template_name = 'alerts/alert_stat.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(AlertStatView, self).get_context_data(**kwargs)
+        context['stats'] = ViewAlertYear.objects.filter(alert_id=self.kwargs['pk']).order_by('-year')
         return context
 
 
