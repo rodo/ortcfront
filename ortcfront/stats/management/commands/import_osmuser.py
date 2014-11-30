@@ -16,7 +16,6 @@
 #     You should have received a copy of the GNU General Public License
 #     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-
 import sys
 import csv
 from django.core.management.base import BaseCommand
@@ -47,4 +46,3 @@ class Command(BaseCommand):
                 OsmUser.objects.get_or_create(osm_uid=row[0],
                                               username=row[1])
 
-                print row

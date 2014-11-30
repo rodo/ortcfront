@@ -98,6 +98,7 @@ class ViewAlertUser(models.Model):
     modified = models.PositiveIntegerField(default=0)
     deleted = models.PositiveIntegerField(default=0)
     userid = models.BigIntegerField(default=0)
+    username = models.CharField(max_length=100)
     item = models.CharField(max_length=10)
     item_id = models.PositiveSmallIntegerField(default=0)
     year = models.PositiveSmallIntegerField(default=0)
