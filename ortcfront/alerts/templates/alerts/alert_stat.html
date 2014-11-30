@@ -30,7 +30,8 @@
   </div>
 
   <div class="col-md-7">
-    {% trans "Statistics" %}
+    {% trans "Statistics" %} : <a href="{% url 'alert_stats_csv' object.id %}">csv</a>
+    <a href="{% url 'alert_stats_csv_users' object.id %}">users</a>
     <table class="table table-condensed">
       <thead>
 	<tr>

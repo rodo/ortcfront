@@ -71,7 +71,7 @@ class AlertStats(models.Model):
 
 
 class ViewAlertYear(models.Model):
-    """This is a  SQL VIEW
+    """This is a SQL VIEW
 
     """
     alert_id = models.IntegerField()
@@ -83,3 +83,41 @@ class ViewAlertYear(models.Model):
     class Meta:
         db_table = 'stats_view_alert_year'
         managed = False
+
+
+    def __unicode__(self):
+        return u"alert %s, year %s" % (self.alert_id, self.year)
+
+class ViewAlertUser(models.Model):
+    """Stats by users
+
+    """
+    alert_id = models.IntegerField()
+    date_stat = models.DateField()
+    created = models.IntegerField(default=0)
+    modified = models.PositiveIntegerField(default=0)
+    deleted = models.PositiveIntegerField(default=0)
+    userid = models.BigIntegerField(default=0)
+    item = models.CharField(max_length=10)
+    item_id = models.PositiveSmallIntegerField(default=0)
+    year = models.PositiveSmallIntegerField(default=0)
+    month = models.PositiveSmallIntegerField(default=0)
+
+    class Meta:
+        db_table = 'stats_view_users'
+        managed = False
+
+
+    def __unicode__(self):
+        return u"alert %s, year %s" % (self.alert_id, self.year)
+
+
+class OsmUser(models.Model):
+    """Stats by users
+
+    """
+    osm_uid = models.BigIntegerField()
+    username = models.CharField(max_length=100)
+
+    def __unicode__(self):
+        return u"%s" % (self.username)

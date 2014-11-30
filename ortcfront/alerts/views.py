@@ -28,6 +28,7 @@ from django.template.loader import render_to_string
 from django.contrib.auth.decorators import login_required
 from django.contrib.syndication.views import Feed
 from django.http import HttpResponseRedirect
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -36,8 +37,10 @@ from djgeojson.views import GeoJSONLayerView
 from .models import Alert, Subscription, Geozone, Event, Report
 from .serializers import AlertSerializer, EventSerializer
 from .forms import AlertNewForm, GeozoneNewForm, ReportNewForm
-from ortcfront.stats.models import ViewAlertYear
-
+from ortcfront.stats.models import ViewAlertYear, ViewAlertUser
+from ortcfront.utils.views import CSVResponseMixin
+from ortcfront.stats.admin import AlertYearResource, AlertMonthResource
+from ortcfront.stats.admin import AlertUserResource
 
 logger = logging.getLogger(__name__)
 
@@ -183,7 +186,7 @@ class AlertView(DetailView):
 
 
 class AlertStatView(DetailView):
-    """The statiistics view
+    """The statistics view
     """
     model = Alert
     template_name = 'alerts/alert_stat.html'
@@ -192,6 +195,24 @@ class AlertStatView(DetailView):
         context = super(AlertStatView, self).get_context_data(**kwargs)
         context['stats'] = ViewAlertYear.objects.filter(alert_id=self.kwargs['pk']).order_by('-year')
         return context
+
+
+class AlertStatCsv(CSVResponseMixin, AlertStatView):
+
+    def get(self, *args, **kwargs ):
+        dataset = AlertYearResource().export(ViewAlertYear.objects.filter(alert_id=self.kwargs['pk']).order_by('-year'))
+        response = HttpResponse(dataset.csv, content_type="csv")
+        response['Content-Disposition'] = 'attachment; filename=filename.csv'
+        return response
+
+
+class AlertUserStatCsv(CSVResponseMixin, AlertStatView):
+
+    def get(self, *args, **kwargs ):
+        dataset = AlertUserResource().export(ViewAlertUser.objects.filter(alert_id=self.kwargs['pk']).order_by('-date_stat'))
+        response = HttpResponse(dataset.csv, content_type="csv")
+        response['Content-Disposition'] = 'attachment; filename=users.csv'
+        return response
 
 
 class EventView(DetailView):
@@ -300,7 +321,6 @@ class EventGeoJSONView(GeoJSONLayerView):
 
     def get_queryset(self):
         return Event.objects.filter(pk=self.kwargs['pk'])
-
 
 
 @login_required

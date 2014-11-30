@@ -22,9 +22,11 @@ from django.shortcuts import redirect
 from django.views.generic.base import RedirectView
 from .views import AlertNewView, AlertEditView, AlertView, AlertListView, AlertStatView
 from .views import GeozoneNewView, GeozoneEditView, GeozoneView, GeozoneGeoJSONView
-from .views import ListAlerts, LatestAlertsFeed
+from .views import ListAlerts, LatestAlertsFeed, AlertStatCsv, AlertUserStatCsv
 from views import EventsFeed
 from .models import Geozone
+from django.views.decorators.cache import cache_page
+
 
 urlpatterns = patterns('',
                        url(r'^s/feed/$', LatestAlertsFeed()),
@@ -34,6 +36,8 @@ urlpatterns = patterns('',
                        url(r'^/(?P<pk>\d+)/edit/$', login_required(AlertEditView.as_view())),
                        url(r'^/(?P<pk>\d+)/subscribe/$', 'ortcfront.alerts.views.subscribe', name='alert_subscribe'),
                        url(r'^/(?P<pk>\d+)/stats/$', AlertStatView.as_view(), name='alert_stats'),
+                       url(r'^/(?P<pk>\d+)/stats/csv$', cache_page(60 * 15)(AlertStatCsv.as_view()), name='alert_stats_csv'),
+                       url(r'^/(?P<pk>\d+)/stats/users.csv$', cache_page(60 * 15)(AlertUserStatCsv.as_view()), name='alert_stats_csv_users'),
                        url(r'^/(?P<pk>\d+)/$', AlertView.as_view()),
                        url(r'^/zone/new/$', login_required(GeozoneNewView.as_view()), name='geozone_new'),
                        url(r'^/zone/(?P<pk>\d+)/edit/$', login_required(GeozoneEditView.as_view()), name='geozone_edit'),

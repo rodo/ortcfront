@@ -153,6 +153,7 @@ INSTALLED_APPS = (
     'rest_framework',
     'rest_framework.authtoken',
     'crispy_forms',
+    'import_export',
     #
     'ortcfront.users',
     'ortcfront.rules',
@@ -201,7 +202,13 @@ OSM_ITEMS = {'1': 'node',
 # Default pagination
 #
 ORCT_PAGINATE_DEFAULT=20
-
+#
+#
+#
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': ('rest_framework.renderers.YAMLRenderer', ),
+    'DEFAULT_PARSER_CLASSES': ('rest_framework.parsers.YAMLParser', )
+    }
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
 # the site admins on every HTTP 500 error when DEBUG=False.
