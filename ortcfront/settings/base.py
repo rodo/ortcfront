@@ -206,8 +206,8 @@ ORCT_PAGINATE_DEFAULT=20
 #
 #
 REST_FRAMEWORK = {
-    'DEFAULT_RENDERER_CLASSES': ('rest_framework.renderers.YAMLRenderer', ),
-    'DEFAULT_PARSER_CLASSES': ('rest_framework.parsers.YAMLParser', )
+    'DEFAULT_RENDERER_CLASSES': ('rest_framework.renderers.JSONRenderer', ),
+    'DEFAULT_PARSER_CLASSES': ('rest_framework.parsers.JSONParser', )
     }
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
