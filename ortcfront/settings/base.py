@@ -148,6 +148,7 @@ INSTALLED_APPS = (
     'leaflet',
     'django_extensions',
     'django_gravatar',
+    'django_hstore',
     'djgeojson',
     'json_dbindex',
     'rest_framework',

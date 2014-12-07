@@ -27,6 +27,7 @@ from django.db.models.signals import post_save
 from django.contrib.gis.geos import GEOSGeometry
 from django.template.loader import render_to_string
 from django.core.urlresolvers import reverse
+from django_hstore import hstore
 from ortcfront.rules.models import Domain, Rule
 
 
@@ -74,11 +75,18 @@ class Alert(models.Model):
     # do stats are compute on this alert
     stat = models.BooleanField(default=False)
 
+
+    #
+    dyn_attr = hstore.DictionaryField(db_index=True,
+                                      blank=True,
+                                      null=True)
     #
     create_by = models.ForeignKey(User)
     create_on = models.DateTimeField(auto_now_add=True)
     update_on = models.DateTimeField(auto_now=True)
 
+    objects = hstore.HStoreManager()
+    
     def get_rules(self):
         return Rule.objects.filter(domains=self.domain)
 
