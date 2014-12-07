@@ -19,6 +19,7 @@
 import sys
 import csv
 from django.core.management.base import BaseCommand
+from django.db import connections
 from optparse import make_option
 from django.conf import settings
 from ortcfront.stats.models import OsmUser
@@ -33,12 +34,18 @@ from django.contrib.gis.geos import MultiPolygon, Polygon
 class Command(BaseCommand):
     help = 'Import datas'
     option_list = BaseCommand.option_list + (
+        make_option("-a",
+                    "--auto",
+                    dest="autoid",
+                    action="store_true",
+                    help="get last project id from database",
+                    default=False),
         make_option("-p",
                     "--project",
                     dest="project_id",
                     type="int",
                     help="project id to import",
-                    default=None),
+                    default=None)
         )
 
     def parsejson(self):
@@ -63,14 +70,31 @@ class Command(BaseCommand):
         http://tasks.hotosm.org/project/767/tasks.json
         """
         self.project_id = options['project_id']
-        if not options['project_id']:
-            sys.stdout.write("exit")
-            sys.exit(0)
+
+        if options['autoid']:
+            self.project_id = self.get_last_project() + 1 
+        else:
+            if not options['project_id']:
+                sys.stdout.write("exit")
+                sys.exit(0)
 
         self.content = self.dljson()
         if self.content:
             self.shape = self.parsejson()
             self.create_alert()
+
+
+    def get_last_project(self):
+        """Lookup for the last project imported
+        """
+        sql = " ".join(["SELECT id, cast(dyn_attr->'hot_project' AS INT)",
+                        "FROM alerts_alert",
+                        "WHERE dyn_attr ? 'hot_project'",
+                        "ORDER BY CAST(dyn_attr->'hot_project' as int) DESC"])
+
+        hpmax = Alert.objects.raw(sql)
+
+        return int(hpmax[0].dyn_attr['hot_project'])
 
     def create_alert(self):
         """Create the Alert in database
@@ -80,6 +104,7 @@ class Command(BaseCommand):
         alert = Alert.objects.create(name="Hot project nb %s" % (self.project_id),
                                      domain_id=settings.IMPORT_DOMAIN_ID,
                                      geozone=gzon,
+                                     stat=True,
                                      dyn_attr={'hot_project': self.project_id},
                                      create_by_id=settings.IMPORT_USER_ID)
         sys.stdout.write("alert %s created\n" % (alert.id))
@@ -92,7 +117,7 @@ class Command(BaseCommand):
                        (bounds[2], bounds[3]),
                        (bounds[2], bounds[1]),
                        (bounds[0], bounds[1])))
-        
+
         mp = MultiPolygon([p2])
         gzon = Geozone.objects.create(name="Hot Project {}".format(self.project_id),
                                       create_by_id=settings.IMPORT_USER_ID,
@@ -105,8 +130,9 @@ class Command(BaseCommand):
         content = None
         url = "http://tasks.hotosm.org/project/{}/tasks.json"
         headers = {'User-Agent': 'osmrtcheck'}
-        req = requests.get(url.format(self.project_id,
-                                      headers=headers))
+        sys.stdout.write("GET %s "% (url.format(self.project_id)))
+        req = requests.get(url.format(self.project_id),
+                                      headers=headers)
 
         if req.status_code == 200:
             content = req.content
