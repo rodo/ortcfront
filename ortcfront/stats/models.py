@@ -45,6 +45,9 @@ class AlertUserStats(models.Model):
     month = models.PositiveSmallIntegerField(blank=True, null=True)
     year = models.PositiveSmallIntegerField(blank=True, null=True)
 
+    def __unicode__(self):
+        return "%s" % (self.alert.id)
+
     def save(self, *args, **kwargs):
         dt_object = datetime.fromtimestamp(mktime(strptime(self.date_stat,'%Y-%m-%d'))) 
         
@@ -84,9 +87,28 @@ class ViewAlertYear(models.Model):
         db_table = 'stats_view_alert_year'
         managed = False
 
-
     def __unicode__(self):
         return u"alert %s, year %s" % (self.alert_id, self.year)
+
+
+class ViewAlertMonth(models.Model):
+    """This is a SQL VIEW
+
+    """
+    alert_id = models.IntegerField()
+    year = models.IntegerField()
+    month = models.IntegerField()
+    created = models.IntegerField(default=0)
+    modified = models.PositiveIntegerField(default=0)
+    deleted = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        db_table = 'stats_view_alert_month'
+        managed = False
+
+    def __unicode__(self):
+        return u"alert %s, year %s, month %s" % (self.alert_id, self.year, self.month)
+
 
 class ViewAlertUser(models.Model):
     """Stats by users
@@ -94,15 +116,15 @@ class ViewAlertUser(models.Model):
     """
     alert_id = models.IntegerField()
     date_stat = models.DateField()
-    created = models.IntegerField(default=0)
-    modified = models.PositiveIntegerField(default=0)
-    deleted = models.PositiveIntegerField(default=0)
+    year = models.PositiveSmallIntegerField(default=0)
+    month = models.PositiveSmallIntegerField(default=0)
     userid = models.BigIntegerField(default=0)
     username = models.CharField(max_length=100)
     item = models.CharField(max_length=10)
     item_id = models.PositiveSmallIntegerField(default=0)
-    year = models.PositiveSmallIntegerField(default=0)
-    month = models.PositiveSmallIntegerField(default=0)
+    created = models.IntegerField(default=0)
+    modified = models.PositiveIntegerField(default=0)
+    deleted = models.PositiveIntegerField(default=0)
 
     class Meta:
         db_table = 'stats_view_users'

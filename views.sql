@@ -3,17 +3,28 @@
 -- about the value, must be unique
 --
 DROP VIEW IF EXISTS stats_view_alert_year;
-
+DROP VIEW IF EXISTS stats_view_alert_month;
+DROP VIEW IF EXISTS stats_view_users;
+--
+--
 CREATE OR REPLACE VIEW stats_view_alert_year AS 
     SELECT alert_id, year, sum(created) created, 
     sum(modified) modified,
     sum(deleted) deleted, row_number() over() as id
     FROM stats_alertstats
     GROUP BY alert_id, "year";
+--
+--
+CREATE OR REPLACE VIEW stats_view_alert_month AS 
+    SELECT alert_id, "year", "month", sum(created) created, 
+    sum(modified) modified,
+    sum(deleted) deleted, row_number() over() as id
+    FROM stats_alertstats
+    GROUP BY alert_id, "year", "month";
 
 --
 --
-DROP VIEW IF EXISTS stats_view_users;
+
 
 CREATE OR REPLACE VIEW stats_view_users AS 
     SELECT 

@@ -18,17 +18,18 @@
 #
 import sys
 import csv
-from django.core.management.base import BaseCommand
-from django.db import connections
-from optparse import make_option
-from django.conf import settings
-from ortcfront.stats.models import OsmUser
-from ortcfront.alerts.models import Alert, Domain, Geozone
 import requests
 import json
-from shapely.geometry import mapping, shape
+from optparse import make_option
+from django.core.management.base import BaseCommand
+from django.db import connections
+from django.conf import settings
 from django.contrib.gis.geos import fromstr
 from django.contrib.gis.geos import MultiPolygon, Polygon
+from shapely.geometry import mapping, shape
+from shapely.ops import cascaded_union
+from ortcfront.stats.models import OsmUser
+from ortcfront.alerts.models import Alert, Domain, Geozone
 
 
 class Command(BaseCommand):
@@ -52,15 +53,11 @@ class Command(BaseCommand):
         """Parse geojson
         """
         d = json.loads(self.content)
-
-        area = None
-
+        polygons = []
         for geom in d['features']:
-            s = shape(geom['geometry'])
-            if area:
-                area = area.union(s)
-            else:
-                area = s
+            polygons.append(shape(geom['geometry']))
+
+        area = cascaded_union(polygons)
         return area
 
     def handle(self, *args, **options):
@@ -72,7 +69,7 @@ class Command(BaseCommand):
         self.project_id = options['project_id']
 
         if options['autoid']:
-            self.project_id = self.get_last_project() + 1 
+            self.project_id = self.get_last_project() + 1
         else:
             if not options['project_id']:
                 sys.stdout.write("exit")

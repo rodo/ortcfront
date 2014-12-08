@@ -86,6 +86,9 @@ class Alert(models.Model):
     update_on = models.DateTimeField(auto_now=True)
 
     objects = hstore.HStoreManager()
+
+    class Meta:
+        ordering = ['-pk']
     
     def get_rules(self):
         return Rule.objects.filter(domains=self.domain)

@@ -20,6 +20,7 @@
 """
 import logging
 import json
+from datetime import date
 from django.conf import settings
 from django.views.generic import DetailView, ListView, CreateView, UpdateView
 from django.core.urlresolvers import reverse, reverse_lazy
@@ -38,6 +39,7 @@ from .models import Alert, Subscription, Geozone, Event, Report
 from .serializers import AlertSerializer, EventSerializer
 from .forms import AlertNewForm, GeozoneNewForm, ReportNewForm
 from ortcfront.stats.models import ViewAlertYear, ViewAlertUser
+from ortcfront.stats.models import ViewAlertMonth
 from ortcfront.utils.views import CSVResponseMixin
 from ortcfront.stats.admin import AlertYearResource, AlertMonthResource
 from ortcfront.stats.admin import AlertUserResource
@@ -194,6 +196,7 @@ class AlertStatView(DetailView):
     def get_context_data(self, **kwargs):
         context = super(AlertStatView, self).get_context_data(**kwargs)
         context['stats'] = ViewAlertYear.objects.filter(alert_id=self.kwargs['pk']).order_by('-year')
+        context['stats_thisyear'] = ViewAlertMonth.objects.filter(alert_id=self.kwargs['pk'],year=date.today().year).order_by('-month')        
         return context
 
 
@@ -202,16 +205,19 @@ class AlertStatCsv(CSVResponseMixin, AlertStatView):
     def get(self, *args, **kwargs ):
         dataset = AlertYearResource().export(ViewAlertYear.objects.filter(alert_id=self.kwargs['pk']).order_by('-year'))
         response = HttpResponse(dataset.csv, content_type="csv")
-        response['Content-Disposition'] = 'attachment; filename=filename.csv'
+        filename = "alert_%s.csv" % (self.kwargs['pk'])
+        response['Content-Disposition'] = 'attachment; filename=%s' % (filename)
         return response
 
 
 class AlertUserStatCsv(CSVResponseMixin, AlertStatView):
-
+    """CSV Export for Users stats
+    """
     def get(self, *args, **kwargs ):
         dataset = AlertUserResource().export(ViewAlertUser.objects.filter(alert_id=self.kwargs['pk']).order_by('-date_stat'))
         response = HttpResponse(dataset.csv, content_type="csv")
-        response['Content-Disposition'] = 'attachment; filename=users.csv'
+        filename = "alert_%s_users.csv" % (self.kwargs['pk'])
+        response['Content-Disposition'] = 'attachment; filename=%s' % (filename)
         return response
 
 

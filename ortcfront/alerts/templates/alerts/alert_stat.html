@@ -30,8 +30,9 @@
   </div>
 
   <div class="col-md-7">
-    {% trans "Statistics" %} : <a href="{% url 'alert_stats_csv' object.id %}">csv</a>
-    <a href="{% url 'alert_stats_csv_users' object.id %}">users</a>
+    <h3>{% trans "Statistics" %}</h3>
+    <div>Download : <a href="{% url 'alert_stats_csv' object.id %}">csv</a>
+    <a href="{% url 'alert_stats_csv_users' object.id %}">users</a></div>
     <table class="table table-condensed">
       <thead>
 	<tr>
@@ -53,8 +54,29 @@
       </tbody>
     </table>
 
+    <div><h3>This year</h3></div>
+    <table class="table table-condensed">
+      <thead>
+	<tr>
+	  <th>{% trans "Month" %}</th>
+      <th>{% trans "Created" %}</th>
+      <th>{% trans "Modified" %}</th>
+      <th>{% trans "Deleted" %}</th>
+	</tr>
+      </thead>
+      <tbody>
+	{% for stat in stats_thisyear %}
+	<tr>
+	  <td>{{ stat.month }}</td>
+	  <td>{{ stat.created }}</td>
+	  <td>{{ stat.modified }}</td>
+	  <td>{{ stat.deleted }}</td>
+	</tr>
+	{% endfor %}
+      </tbody>
+    </table>    
 
-  
+
     
   </div>
 </div>
