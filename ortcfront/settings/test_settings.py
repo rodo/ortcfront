@@ -41,11 +41,8 @@ INSTALLED_APPS += (
 
 JENKINS_TASKS = (
 
-
-
-    'django_jenkins.tasks.run_pep8',
-    'django_jenkins.tasks.run_sloccount',
     )
+
 
 
 PROJECT_ROOT_PATH = os.path.dirname(os.path.realpath(__file__))
