@@ -24,13 +24,15 @@ DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 DATABASES = {
+    'default': {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
         'NAME': 'ortcfront',
         'USER': 'foobar',
         'PASSWORD': 'barfoo',
         'HOST': 'localhost',
         'PORT': '5432'
-}
+        }
+    }
 
 
 INSTALLED_APPS += (
